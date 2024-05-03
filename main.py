@@ -1,11 +1,10 @@
 import streamlit as st
 import csv
 import os.path
-import pandas as pd
 
 # Custom function to create star rating component
 def starrating(label, stars):
-    star_click = st.radio(label, ["★"] * stars)
+    star_click = st.radio(label, [f"{'★' * i}" for i in range(1, stars + 1)])
     return len(star_click)
 
 def collect_user_data():
