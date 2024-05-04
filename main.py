@@ -1,6 +1,6 @@
+
 import streamlit as st
-import csv
-import os.path
+import pandas as pd
 
 # Custom function to create star rating component
 def starrating(label, stars):
@@ -18,19 +18,21 @@ def collect_user_data():
     rating = starrating("Rate your shopping experience (1-5)", 5)
 
     if st.button("Submit"):
-        # Define the CSV file path
-        csv_file = "user_data.csv"
+        # Load CSV data from GitHub
+        csv_file_url = "https://raw.githubusercontent.com/Meet2147/Shop_Parasmani/main/user_data.csv"
+        data = pd.read_csv(csv_file_url)
 
-        # Check if the file exists, if not create it and write the header row
-        if not os.path.isfile(csv_file):
-            with open(csv_file, "w", newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow(["Name", "Locality", "Phone Number", "First Time", "Rating"])
+        # Append the collected data to the CSV data
+        new_data = pd.DataFrame({"Name": [name],
+                                 "Locality": [locality],
+                                 "Phone Number": [phone_number],
+                                 "First Time": [first_time],
+                                 "Rating": [rating]})
+        data = pd.concat([data, new_data], ignore_index=True)
 
-        # Append the collected data to the CSV file
-        with open(csv_file, "a", newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow([name, locality, phone_number, first_time, rating])
+        # Write the updated data back to the CSV file on GitHub
+        data.to_csv(csv_file_url, index=False)
+        
         st.success("Data submitted successfully!")
 
 if __name__ == "__main__":
