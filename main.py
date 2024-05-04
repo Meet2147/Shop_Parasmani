@@ -1,6 +1,7 @@
-
 import streamlit as st
 import pandas as pd
+import requests
+from io import StringIO
 
 # Custom function to create star rating component
 def starrating(label, stars):
@@ -20,7 +21,8 @@ def collect_user_data():
     if st.button("Submit"):
         # Load CSV data from GitHub
         csv_file_url = "https://raw.githubusercontent.com/Meet2147/Shop_Parasmani/main/user_data.csv"
-        data = pd.read_csv(csv_file_url)
+        response = requests.get(csv_file_url)
+        data = pd.read_csv(StringIO(response.text))
 
         # Append the collected data to the CSV data
         new_data = pd.DataFrame({"Name": [name],
