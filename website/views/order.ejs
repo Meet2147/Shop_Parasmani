@@ -1,0 +1,53 @@
+<%- include('partials/header') %>
+<%
+  const steps = ['confirmed', 'packed', 'shipped', 'delivered'];
+  const reached = steps.indexOf(order.status);
+%>
+<section class="wrap section narrow">
+  <% if (order.status === 'awaiting_payment') { %>
+    <div class="order-hero pending">
+      <h1>Payment pending</h1>
+      <p>Your order <strong><%= order.order_no %></strong> is saved but not paid yet.</p>
+      <% if (order.payment_method === 'razorpay') { %><a class="btn btn-primary" href="/pay/<%= order.order_no %>?t=<%= order.access_token %>">Pay now</a><% } %>
+    </div>
+  <% } else if (order.status === 'cancelled') { %>
+    <div class="order-hero cancelled"><h1>Order cancelled</h1><p>Order <strong><%= order.order_no %></strong> has been cancelled. Contact us if you have any questions.</p></div>
+  <% } else { %>
+    <div class="order-hero">
+      <svg viewBox="0 0 48 48" class="tick" aria-hidden="true"><circle cx="24" cy="24" r="22"/><path d="m14 25 7 7 13-15"/></svg>
+      <h1>Thank you, <%= order.customer_name.split(' ')[0] %>!</h1>
+      <p>Your order <strong><%= order.order_no %></strong> is <%= order.status === 'confirmed' ? 'confirmed' : STATUS_LABELS[order.status].toLowerCase() %>.
+        <%= order.payment_method === 'cod' ? `Please keep ${money(order.total)} ready at delivery.` : 'Your payment was received.' %></p>
+      <p class="muted small">Save this page or note your order number to track it later.</p>
+    </div>
+    <ol class="timeline">
+      <% steps.forEach((s, i) => { %><li class="<%= i <= reached ? 'done' : '' %>"><%= STATUS_LABELS[s] %></li><% }) %>
+    </ol>
+    <% if (order.tracking_info) { %><p class="tracking"><strong>Shipping details:</strong> <%= order.tracking_info %></p><% } %>
+  <% } %>
+
+  <div class="order-box">
+    <h2>Items</h2>
+    <% items.forEach(i => { %>
+      <div class="mini-line">
+        <img src="<%= i.image || '/static/img/placeholder.svg' %>" alt="">
+        <div><div><%= i.name %></div><div class="muted small"><%= i.size ? `Size ${i.size} · ` : '' %>Qty <%= i.qty %></div></div>
+        <span><%= money(i.price * i.qty) %></span>
+      </div>
+    <% }) %>
+    <div class="sum-row"><span>Subtotal</span><span><%= money(order.subtotal) %></span></div>
+    <div class="sum-row"><span>Shipping</span><span><%= order.shipping ? money(order.shipping) : 'Free' %></span></div>
+    <div class="sum-row total"><span>Total</span><span><%= money(order.total) %></span></div>
+    <p class="muted small">Payment: <%= order.payment_method === 'cod' ? 'Cash on Delivery' : 'Online (Razorpay)' %> · <%= order.payment_status === 'paid' ? 'Paid' : 'Not paid yet' %></p>
+  </div>
+
+  <div class="order-box">
+    <h2>Delivering to</h2>
+    <p><%= order.customer_name %><br><%= order.address1 %><% if (order.address2) { %>, <%= order.address2 %><% } %><br>
+      <%= order.city %>, <%= order.state %> <%= order.pincode %><br>Phone <%= order.phone %></p>
+  </div>
+
+  <p class="center"><a class="btn btn-ghost" href="https://wa.me/<%= shop.whatsapp %>?text=<%= encodeURIComponent(`Hi, about my order ${order.order_no}`) %>" target="_blank" rel="noopener">Questions? WhatsApp us</a></p>
+</section>
+
+<%- include('partials/footer') %>

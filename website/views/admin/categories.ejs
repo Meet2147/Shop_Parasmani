@@ -1,0 +1,27 @@
+<%- include('_header') %>
+<h1 class="page-title">Categories</h1>
+<div class="panel">
+  <% categories.forEach(c => { %>
+    <form method="post" action="/admin/categories" class="cat-row">
+      <input type="hidden" name="_csrf" value="<%= csrf %>">
+      <input type="hidden" name="id" value="<%= c.id %>">
+      <input name="name" value="<%= c.name %>" aria-label="Name">
+      <input name="description" value="<%= c.description %>" aria-label="Description">
+      <input name="sort" type="number" value="<%= c.sort %>" aria-label="Order" title="Display order">
+      <label class="check"><input type="checkbox" name="is_festive" value="1" <%= c.is_festive ? 'checked' : '' %>> Navratri</label>
+      <span class="muted small"><%= c.product_count %> items</span>
+      <button class="btn btn-ghost btn-small">Save</button>
+    </form>
+  <% }) %>
+</div>
+<h2>Add a category</h2>
+<form method="post" action="/admin/categories" class="panel cat-row">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <input name="name" placeholder="Name, e.g. Sarees" required>
+  <input name="description" placeholder="Short description">
+  <input name="sort" type="number" value="10" title="Display order">
+  <label class="check"><input type="checkbox" name="is_festive" value="1"> Navratri</label>
+  <span></span>
+  <button class="btn btn-primary btn-small">Add</button>
+</form>
+<%- include('_footer') %>

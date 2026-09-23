@@ -1,0 +1,38 @@
+<%- include('partials/header') %>
+
+<section class="wrap section">
+  <nav class="crumbs"><a href="/">Home</a> / <span><%= heading %></span></nav>
+  <div class="listing-head">
+    <div>
+      <h1 class="page-title"><%= heading %></h1>
+      <% if (intro) { %><p class="muted intro"><%= intro %></p><% } %>
+    </div>
+    <form class="filters" method="get">
+      <% if (search) { %><input type="hidden" name="q" value="<%= search %>"><% } %>
+      <label class="check"><input type="checkbox" name="instock" value="1" <%= inStock ? 'checked' : '' %> data-autosubmit> In stock only</label>
+      <label class="select">Sort
+        <select name="sort" data-autosubmit>
+          <option value="new" <%= sort === 'new' ? 'selected' : '' %>>Newest</option>
+          <option value="price-asc" <%= sort === 'price-asc' ? 'selected' : '' %>>Price: low to high</option>
+          <option value="price-desc" <%= sort === 'price-desc' ? 'selected' : '' %>>Price: high to low</option>
+          <option value="name" <%= sort === 'name' ? 'selected' : '' %>>Name</option>
+        </select>
+      </label>
+      <noscript><button class="btn btn-small">Apply</button></noscript>
+    </form>
+  </div>
+
+  <% if (products.length) { %>
+    <p class="muted small"><%= products.length %> <%= products.length === 1 ? 'product' : 'products' %></p>
+    <div class="grid">
+      <% products.forEach(p => { %><%- include('partials/product-card', { p }) %><% }) %>
+    </div>
+  <% } else { %>
+    <div class="empty">
+      <p>No products found<%= search ? ' for that search' : ' here yet' %>.</p>
+      <a class="btn btn-primary" href="/shop">See all products</a>
+    </div>
+  <% } %>
+</section>
+
+<%- include('partials/footer') %>

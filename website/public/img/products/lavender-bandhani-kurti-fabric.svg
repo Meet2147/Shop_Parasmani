@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 750">
+  <defs>
+    <pattern id="pt" width="34" height="34" patternUnits="userSpaceOnUse">
+      <rect width="34" height="34" fill="#8e7cc3"/>
+      <circle cx="8" cy="8" r="3.2" fill="none" stroke="#ffffff" stroke-width="2"/>
+      <circle cx="25" cy="25" r="3.2" fill="none" stroke="#ffffff" stroke-width="2"/>
+      <circle cx="25" cy="8" r="1.6" fill="#f7d774"/><circle cx="8" cy="25" r="1.6" fill="#f7d774"/></pattern>
+    <pattern id="bd" width="30" height="30" patternUnits="userSpaceOnUse">
+    <rect width="30" height="30" fill="#4a3b82"/>
+    <path d="M0 15 L15 3 L30 15 L15 27 Z" fill="#d6a534"/><circle cx="15" cy="15" r="4" fill="#4a3b82"/>
+    <rect width="30" height="3" fill="#d6a534"/><rect y="27" width="30" height="3" fill="#d6a534"/></pattern>
+    <linearGradient id="fold" x1="0" x2="1">
+      <stop offset="0" stop-color="#000" stop-opacity=".18"/><stop offset=".3" stop-color="#fff" stop-opacity=".08"/>
+      <stop offset=".55" stop-color="#000" stop-opacity=".1"/><stop offset=".8" stop-color="#fff" stop-opacity=".1"/>
+      <stop offset="1" stop-color="#000" stop-opacity=".2"/></linearGradient>
+    <radialGradient id="back" cx=".5" cy=".4" r=".75"><stop offset="0" stop-color="#fffaf1"/><stop offset="1" stop-color="#f0e2cc"/></radialGradient>
+    <filter id="sh" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#5a2a12" flood-opacity=".22"/></filter>
+  </defs>
+  <rect width="600" height="750" fill="url(#back)"/>
+  <g filter="url(#sh)">
+    <g transform="rotate(-3 300 420)"><rect x="120" y="390" width="360" height="220" rx="12" fill="url(#pt)"/>
+      <rect x="120" y="390" width="360" height="220" rx="12" fill="#00000025"/></g>
+    <g transform="rotate(2 300 330)"><rect x="100" y="170" width="400" height="330" rx="12" fill="url(#pt)"/>
+      <rect x="100" y="170" width="400" height="330" rx="12" fill="url(#fold)"/>
+      <path d="M100 470 L500 470" stroke="#ffffff55" stroke-width="3"/></g></g>
+</svg>

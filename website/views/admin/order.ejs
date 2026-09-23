@@ -1,0 +1,51 @@
+<%- include('_header') %>
+<div class="admin-head">
+  <h1 class="page-title">Order <%= order.order_no %></h1>
+  <a href="/admin/orders">Back to orders</a>
+</div>
+<div class="two-col">
+  <section class="panel">
+    <h2>Items</h2>
+    <% items.forEach(i => { %>
+      <div class="mini-line">
+        <img src="<%= i.image || '/static/img/placeholder.svg' %>" alt="">
+        <div><div><strong><%= i.name %></strong></div><div class="muted small"><%= i.size ? `Size ${i.size} · ` : '' %><%= money(i.price) %> × <%= i.qty %></div></div>
+        <span><%= money(i.price * i.qty) %></span>
+      </div>
+    <% }) %>
+    <div class="sum-row"><span>Subtotal</span><span><%= money(order.subtotal) %></span></div>
+    <div class="sum-row"><span>Shipping</span><span><%= order.shipping ? money(order.shipping) : 'Free' %></span></div>
+    <div class="sum-row total"><span>Total</span><span><%= money(order.total) %></span></div>
+    <% if (order.notes) { %><p class="note"><strong>Customer note:</strong> <%= order.notes %></p><% } %>
+  </section>
+  <section>
+    <div class="panel">
+      <h2>Customer</h2>
+      <p><strong><%= order.customer_name %></strong><br>
+        <a href="tel:+91<%= order.phone %>">+91 <%= order.phone %></a> ·
+        <a href="https://wa.me/91<%= order.phone %>?text=<%= encodeURIComponent(`Namaste ${order.customer_name}, this is ${shop.name} about your order ${order.order_no}.`) %>" target="_blank" rel="noopener">WhatsApp</a>
+        <% if (order.email) { %><br><a href="mailto:<%= order.email %>"><%= order.email %></a><% } %></p>
+      <p><%= order.address1 %><% if (order.address2) { %>, <%= order.address2 %><% } %><br><%= order.city %>, <%= order.state %> <%= order.pincode %></p>
+      <p class="muted small">Placed <%= ist(order.created_at) %> · <%= order.payment_method === 'cod' ? 'Cash on Delivery' : 'Online via Razorpay' %>
+        <% if (order.razorpay_payment_id) { %><br>Razorpay payment <%= order.razorpay_payment_id %><% } %></p>
+    </div>
+    <form method="post" class="panel form-grid">
+      <input type="hidden" name="_csrf" value="<%= csrf %>">
+      <h2 class="full">Update order</h2>
+      <label>Status
+        <select name="status">
+          <% Object.entries(STATUS_LABELS).forEach(([k, label]) => { %><option value="<%= k %>" <%= order.status === k ? 'selected' : '' %>><%= label %></option><% }) %>
+        </select>
+      </label>
+      <label>Payment
+        <select name="payment_status">
+          <% ['pending', 'paid', 'refunded'].forEach(s => { %><option value="<%= s %>" <%= order.payment_status === s ? 'selected' : '' %>><%= s[0].toUpperCase() + s.slice(1) %></option><% }) %>
+        </select>
+      </label>
+      <label class="full">Courier and tracking number <span class="muted">shown to the customer</span><input name="tracking_info" value="<%= order.tracking_info %>" placeholder="e.g. Delhivery 1234567890"></label>
+      <div class="full"><button class="btn btn-primary">Save changes</button></div>
+      <p class="full muted small">Cancelling an order puts its items back into stock.</p>
+    </form>
+  </section>
+</div>
+<%- include('_footer') %>

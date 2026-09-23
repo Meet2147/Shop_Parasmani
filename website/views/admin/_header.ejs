@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title><%= title %> | <%= shop.name %> admin</title>
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/admin.css">
+</head>
+<body class="admin">
+  <% if (admin) { %>
+  <header class="admin-bar">
+    <div class="wrap admin-bar-row">
+      <a class="logo" href="/admin"><%= shop.name %> <small>Admin</small></a>
+      <nav>
+        <a href="/admin" class="<%= path === '/' ? 'active' : '' %>">Dashboard</a>
+        <a href="/admin/orders" class="<%= path.startsWith('/orders') ? 'active' : '' %>">Orders</a>
+        <a href="/admin/products" class="<%= path.startsWith('/products') ? 'active' : '' %>">Products</a>
+        <a href="/admin/categories" class="<%= path.startsWith('/categories') ? 'active' : '' %>">Categories</a>
+        <a href="/" target="_blank">View shop</a>
+      </nav>
+      <form method="post" action="/admin/logout"><button class="link-btn">Log out</button></form>
+    </div>
+  </header>
+  <% } %>
+  <% if (flash) { %><div class="wrap"><div class="flash flash-<%= flash.type %>"><%= flash.message %></div></div><% } %>
+  <main class="wrap admin-main">

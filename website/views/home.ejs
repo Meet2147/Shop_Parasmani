@@ -1,0 +1,74 @@
+<%- include('partials/header') %>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-text">
+      <span class="eyebrow">Navratri Collection <%= new Date().getFullYear() %></span>
+      <h1>Twirl through all nine nights in colour</h1>
+      <p>Mirror work chaniya cholis, kutchi blouses and wide-ghera ghagras, hand-picked at our store and now delivered to your door.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="/c/chaniya-choli">Shop Chaniya Choli</a>
+        <a class="btn btn-ghost" href="/c/dress-materials">Dress materials</a>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <% festive.slice(0, 3).forEach((p, i) => { %>
+        <img class="hero-img hero-img-<%= i %>" src="<%= p.images[0] %>" alt="">
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="wrap section">
+  <h2 class="section-title">Shop by category</h2>
+  <div class="cat-grid">
+    <% categories.forEach(c => { %>
+      <a class="cat-tile <%= c.is_festive ? 'festive' : '' %>" href="/c/<%= c.slug %>">
+        <img src="<%= c.image || '/static/img/placeholder.svg' %>" alt="" loading="lazy">
+        <span><%= c.name %></span>
+      </a>
+    <% }) %>
+  </div>
+</section>
+
+<% if (festive.length) { %>
+<section class="festive-band">
+  <div class="wrap section">
+    <div class="section-head">
+      <h2 class="section-title">Navratri special</h2>
+      <a href="/c/chaniya-choli" class="link">View all</a>
+    </div>
+    <div class="grid scroll-row">
+      <% festive.forEach(p => { %><%- include('partials/product-card', { p }) %><% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<section class="wrap section">
+  <div class="section-head">
+    <h2 class="section-title">Bestsellers from our store</h2>
+    <a href="/shop" class="link">Shop all</a>
+  </div>
+  <div class="grid">
+    <% featured.forEach(p => { %><%- include('partials/product-card', { p }) %><% }) %>
+  </div>
+</section>
+
+<section class="wrap section trust">
+  <div><strong>Cash on Delivery</strong><span>Pay when your parcel arrives</span></div>
+  <div><strong>Secure payments</strong><span>UPI, cards and netbanking via Razorpay</span></div>
+  <div><strong>Easy returns</strong><span>7 day return on unused items</span></div>
+  <div><strong>WhatsApp help</strong><span>Ask us about any fabric or size</span></div>
+</section>
+
+<section class="wrap section visit">
+  <div>
+    <h2 class="section-title">Visit our shop</h2>
+    <p>Want to feel the fabric first? Come by our store and see the full collection in person.</p>
+    <p class="muted"><%= shop.address %><br><%= shop.hours %></p>
+  </div>
+  <a class="btn btn-ghost" href="https://wa.me/<%= shop.whatsapp %>" target="_blank" rel="noopener">Message us on WhatsApp</a>
+</section>
+
+<%- include('partials/footer') %>

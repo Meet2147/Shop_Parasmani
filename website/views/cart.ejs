@@ -1,0 +1,53 @@
+<%- include('partials/header') %>
+
+<section class="wrap section">
+  <h1 class="page-title">Your cart</h1>
+  <% cart.problems.forEach(msg => { %><div class="flash flash-error"><%= msg %></div><% }) %>
+
+  <% if (!cart.items.length) { %>
+    <div class="empty">
+      <p>Your cart is empty.</p>
+      <a class="btn btn-primary" href="/shop">Start shopping</a>
+    </div>
+  <% } else { %>
+    <div class="cart-layout">
+      <div class="cart-lines">
+        <% cart.items.forEach((item, index) => { %>
+          <div class="line">
+            <a href="/p/<%= item.product.slug %>"><img src="<%= item.product.images[0] || '/static/img/placeholder.svg' %>" alt=""></a>
+            <div class="line-info">
+              <a class="line-name" href="/p/<%= item.product.slug %>"><%= item.product.name %></a>
+              <% if (item.size) { %><div class="muted small">Size: <%= item.size %></div><% } %>
+              <div class="muted small"><%= money(item.product.price) %> each</div>
+              <div class="line-actions">
+                <form method="post" action="/cart/update" class="qty qty-sm">
+                  <input type="hidden" name="index" value="<%= index %>">
+                  <button name="qty" value="<%= item.qty - 1 %>" aria-label="Less">−</button>
+                  <span><%= item.qty %></span>
+                  <button name="qty" value="<%= item.qty + 1 %>" aria-label="More" <%= item.qty >= item.product.stock ? 'disabled' : '' %>>+</button>
+                </form>
+                <form method="post" action="/cart/update">
+                  <input type="hidden" name="index" value="<%= index %>">
+                  <button class="link-btn" name="qty" value="0">Remove</button>
+                </form>
+              </div>
+            </div>
+            <div class="line-total"><%= money(item.lineTotal) %></div>
+          </div>
+        <% }) %>
+      </div>
+
+      <aside class="summary">
+        <h2>Order summary</h2>
+        <div class="sum-row"><span>Subtotal (<%= cart.count %> items)</span><span><%= money(cart.subtotal) %></span></div>
+        <div class="sum-row"><span>Shipping</span><span><%= cart.shipping ? money(cart.shipping) : 'Free' %></span></div>
+        <% if (cart.shipping) { %><p class="hint">Add <%= money(freeShippingAbove - cart.subtotal) %> more for free shipping.</p><% } %>
+        <div class="sum-row total"><span>Total</span><span><%= money(cart.total) %></span></div>
+        <a class="btn btn-primary btn-lg btn-block" href="/checkout">Checkout</a>
+        <a class="link center" href="/shop">Continue shopping</a>
+      </aside>
+    </div>
+  <% } %>
+</section>
+
+<%- include('partials/footer') %>

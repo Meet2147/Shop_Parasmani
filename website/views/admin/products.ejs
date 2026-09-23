@@ -1,0 +1,32 @@
+<%- include('_header') %>
+<div class="admin-head">
+  <h1 class="page-title">Products</h1>
+  <a class="btn btn-primary" href="/admin/products/new">+ Add product</a>
+</div>
+<form method="get" class="filters">
+  <label class="select">Category
+    <select name="category" data-autosubmit>
+      <option value="">All categories</option>
+      <% categories.forEach(c => { %><option value="<%= c.id %>" <%= cat === c.id ? 'selected' : '' %>><%= c.name %></option><% }) %>
+    </select>
+  </label>
+</form>
+<div class="panel">
+<table class="table products-table">
+  <thead><tr><th></th><th>Product</th><th>Price</th><th>Stock</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+  <% products.forEach(p => { %>
+    <tr>
+      <td><img class="thumb-sm" src="<%= p.images[0] || '/static/img/placeholder.svg' %>" alt=""></td>
+      <td><a href="/admin/products/<%= p.id %>/edit"><strong><%= p.name %></strong></a><div class="muted small"><%= p.category_name %><%= p.featured ? ' · Featured' : '' %></div></td>
+      <td><%= money(p.price) %><% if (p.mrp > p.price) { %><div class="muted small"><s><%= money(p.mrp) %></s></div><% } %></td>
+      <td class="<%= p.stock <= 3 ? 'warn' : '' %>"><%= p.stock %></td>
+      <td><span class="pill <%= p.active ? 'pill-confirmed' : 'pill-cancelled' %>"><%= p.active ? 'Live' : 'Hidden' %></span></td>
+      <td class="actions"><a href="/admin/products/<%= p.id %>/edit">Edit</a> <a href="/p/<%= p.slug %>" target="_blank">View</a></td>
+    </tr>
+  <% }) %>
+  </tbody>
+</table>
+<% if (!products.length) { %><p class="muted">No products yet.</p><% } %>
+</div>
+<%- include('_footer') %>

@@ -1,0 +1,15 @@
+<a class="card" href="/p/<%= p.slug %>">
+  <div class="card-img">
+    <img src="<%= p.images[0] || '/static/img/placeholder.svg' %>" alt="<%= p.name %>" loading="lazy">
+    <% if (p.mrp > p.price) { %><span class="tag tag-off"><%= Math.round((1 - p.price / p.mrp) * 100) %>% off</span><% } %>
+    <% if (p.stock <= 0) { %><span class="tag tag-out">Sold out</span>
+    <% } else if (p.stock <= 3) { %><span class="tag tag-low">Only <%= p.stock %> left</span><% } %>
+  </div>
+  <div class="card-body">
+    <div class="card-name"><%= p.name %></div>
+    <div class="price-row">
+      <span class="price"><%= money(p.price) %></span>
+      <% if (p.mrp > p.price) { %><s class="mrp"><%= money(p.mrp) %></s><% } %>
+    </div>
+  </div>
+</a>
