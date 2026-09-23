@@ -1,0 +1,14 @@
+<%- include('partials/header') %>
+
+<section class="wrap section narrow">
+  <h1 class="page-title">Track your order</h1>
+  <p class="muted">Enter the order number from your confirmation and the mobile number you ordered with.</p>
+  <% if (error) { %><div class="flash flash-error"><%= error %></div><% } %>
+  <form method="post" action="/track" class="fields single">
+    <label>Order number<input name="order_no" value="<%= form.order_no || '' %>" placeholder="PNX-260923-ABCD" required></label>
+    <label>Mobile number<input name="phone" value="<%= form.phone || '' %>" inputmode="tel" required></label>
+    <button class="btn btn-primary btn-lg" type="submit">Find my order</button>
+  </form>
+</section>
+
+<%- include('partials/footer') %>

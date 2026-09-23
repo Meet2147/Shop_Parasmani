@@ -1,0 +1,42 @@
+<%- include('partials/header') %>
+
+<section class="wrap section narrow center">
+  <h1 class="page-title">Complete your payment</h1>
+  <p>Order <strong><%= order.order_no %></strong> · Amount <strong><%= money(order.total) %></strong></p>
+  <p class="muted">The secure Razorpay window should open automatically. If it doesn't, tap the button below.</p>
+  <button id="payBtn" class="btn btn-primary btn-lg">Pay <%= money(order.total) %></button>
+  <p class="muted small">Having trouble? <a href="https://wa.me/<%= shop.whatsapp %>?text=<%= encodeURIComponent(`Hi, I need help paying for order ${order.order_no}`) %>" target="_blank" rel="noopener">Message us on WhatsApp</a> and we'll help.</p>
+
+  <form id="verifyForm" method="post" action="/payment/verify" hidden>
+    <input name="razorpay_order_id"><input name="razorpay_payment_id"><input name="razorpay_signature">
+  </form>
+</section>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  (function () {
+    var options = <%- JSON.stringify({
+      key: keyId,
+      amount: order.total,
+      currency: 'INR',
+      name: shop.name,
+      description: 'Order ' + order.order_no,
+      order_id: order.razorpay_order_id,
+      prefill: { name: order.customer_name, email: order.email, contact: '+91' + order.phone },
+      notes: { order_no: order.order_no },
+      theme: { color: '#7a1230' },
+    }).replace(/</g, '\\u003c') %>;
+    options.handler = function (resp) {
+      var f = document.getElementById('verifyForm');
+      f.razorpay_order_id.value = resp.razorpay_order_id;
+      f.razorpay_payment_id.value = resp.razorpay_payment_id;
+      f.razorpay_signature.value = resp.razorpay_signature;
+      f.submit();
+    };
+    function open() { new Razorpay(options).open(); }
+    document.getElementById('payBtn').addEventListener('click', open);
+    if (window.Razorpay) open();
+  })();
+</script>
+
+<%- include('partials/footer') %>

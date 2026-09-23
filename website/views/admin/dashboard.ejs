@@ -1,0 +1,37 @@
+<%- include('_header') %>
+<h1 class="page-title">Namaste! Here's your shop today</h1>
+<div class="stats">
+  <a class="stat" href="/admin/orders"><span>Orders today</span><strong><%= stats.ordersToday %></strong></a>
+  <a class="stat attention" href="/admin/orders?status=confirmed"><span>Waiting to ship</span><strong><%= stats.toShip %></strong></a>
+  <div class="stat"><span>Sales, last 30 days</span><strong><%= money(stats.revenue30) %></strong></div>
+  <a class="stat" href="/admin/products"><span>Products live</span><strong><%= stats.products %></strong></a>
+</div>
+
+<div class="two-col">
+  <section class="panel">
+    <div class="panel-head"><h2>Latest orders</h2><a href="/admin/orders">All orders</a></div>
+    <% if (!recent.length) { %><p class="muted">No orders yet. They'll show up here as soon as a customer checks out.</p><% } else { %>
+    <table class="table">
+      <thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th></tr></thead>
+      <tbody>
+      <% recent.forEach(o => { %>
+        <tr>
+          <td><a href="/admin/orders/<%= o.id %>"><%= o.order_no %></a><div class="muted small"><%= ist(o.created_at) %></div></td>
+          <td><%= o.customer_name %><div class="muted small"><%= o.city %></div></td>
+          <td><%= money(o.total) %><div class="muted small"><%= o.payment_method === 'cod' ? 'COD' : 'Online' %></div></td>
+          <td><span class="pill pill-<%= o.status %>"><%= STATUS_LABELS[o.status] %></span></td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+    <% } %>
+  </section>
+  <section class="panel">
+    <div class="panel-head"><h2>Low stock</h2><a href="/admin/products">Products</a></div>
+    <% if (!lowStock.length) { %><p class="muted">Everything is well stocked.</p><% } %>
+    <% lowStock.forEach(p => { %>
+      <a class="low-row" href="/admin/products/<%= p.id %>/edit"><span><%= p.name %></span><strong class="<%= p.stock === 0 ? 'zero' : '' %>"><%= p.stock === 0 ? 'Sold out' : p.stock + ' left' %></strong></a>
+    <% }) %>
+  </section>
+</div>
+<%- include('_footer') %>

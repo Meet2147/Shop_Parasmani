@@ -1,0 +1,54 @@
+<%- include('_header') %>
+<%
+  const err = (k) => errors[k] ? `<span class="field-error">${errors[k]}</span>` : '';
+  const rupees = (paise) => paise ? String(paise / 100) : '';
+%>
+<div class="admin-head">
+  <h1 class="page-title"><%= product.id ? 'Edit product' : 'Add a new product' %></h1>
+  <a href="/admin/products">Back to products</a>
+</div>
+<form method="post" action="/admin/products<%= product.id ? '/' + product.id : '' %>" enctype="multipart/form-data" class="panel product-form">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <div class="form-grid">
+    <label class="full <%= errors.name ? 'has-error' : '' %>">Product name<input name="name" value="<%= product.name %>" placeholder="e.g. Rani Pink Mirror Work Chaniya Choli" required><%- err('name') %></label>
+    <label class="<%= errors.category_id ? 'has-error' : '' %>">Category
+      <select name="category_id" required>
+        <option value="">Choose</option>
+        <% categories.forEach(c => { %><option value="<%= c.id %>" <%= Number(product.category_id) === c.id ? 'selected' : '' %>><%= c.name %></option><% }) %>
+      </select><%- err('category_id') %>
+    </label>
+    <label>Stock (pieces in hand)<input name="stock" type="number" min="0" value="<%= product.stock %>"></label>
+    <label class="<%= errors.price ? 'has-error' : '' %>">Selling price (₹)<input name="price" inputmode="decimal" value="<%= rupees(product.price) %>" placeholder="2499" required><%- err('price') %></label>
+    <label class="<%= errors.mrp ? 'has-error' : '' %>"><span>MRP (₹) <span class="muted">optional, shown crossed out</span></span><input name="mrp" inputmode="decimal" value="<%= rupees(product.mrp) %>" placeholder="3499"><%- err('mrp') %></label>
+    <label>Fabric<input name="fabric" value="<%= product.fabric %>" placeholder="Cotton, rayon, georgette…"></label>
+    <label>Colour<input name="color" value="<%= product.color %>" placeholder="Rani pink and green"></label>
+    <label class="full"><span>Sizes <span class="muted">comma separated, leave empty for fabric pieces</span></span><input name="sizes" value="<%= product.sizes %>" placeholder="32, 34, 36, 38 or Free Size"></label>
+    <label class="full">Description<textarea name="description" rows="6" placeholder="What's included, length of fabric, work details, wash care…"><%= product.description %></textarea></label>
+  </div>
+
+  <h2>Photos</h2>
+  <% if (product.images.length) { %>
+    <div class="img-list">
+      <% product.images.forEach(img => { %>
+        <label class="img-item"><img src="<%= img %>" alt=""><span><input type="checkbox" name="remove_image" value="<%= img %>"> Remove</span></label>
+      <% }) %>
+    </div>
+  <% } %>
+  <label class="upload"><span>Add photos <span class="muted">JPG, PNG or WebP, up to 6 MB each. The first photo is the main one.</span></span>
+    <input type="file" name="images" accept="image/jpeg,image/png,image/webp" multiple>
+  </label>
+
+  <div class="toggles">
+    <label class="check"><input type="checkbox" name="active" value="1" <%= product.active ? 'checked' : '' %>> Show on website</label>
+    <label class="check"><input type="checkbox" name="featured" value="1" <%= product.featured ? 'checked' : '' %>> Feature on home page</label>
+  </div>
+  <div class="form-actions"><button class="btn btn-primary btn-lg">Save product</button></div>
+</form>
+<% if (product.id) { %>
+  <form method="post" action="/admin/products/<%= product.id %>/delete" data-confirm="Delete this product permanently? Past orders keep their details." class="delete-form">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <button class="btn btn-danger btn-small">Delete product</button>
+    <span class="muted small">Tip: untick "Show on website" to hide it without deleting.</span>
+  </form>
+<% } %>
+<%- include('_footer') %>

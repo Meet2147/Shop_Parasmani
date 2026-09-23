@@ -1,0 +1,11 @@
+<%- include('_header') %>
+<div class="login-box">
+  <div class="logo"><%= shop.name %></div>
+  <h1>Shop admin</h1>
+  <% if (error) { %><div class="flash flash-error"><%= error %></div><% } %>
+  <form method="post" action="/admin/login" class="fields single">
+    <label>Password<input type="password" name="password" autocomplete="current-password" autofocus required></label>
+    <button class="btn btn-primary btn-lg">Log in</button>
+  </form>
+</div>
+<%- include('_footer') %>

@@ -1,0 +1,28 @@
+<%- include('_header') %>
+<h1 class="page-title">Orders</h1>
+<nav class="tabs">
+  <a href="/admin/orders" class="<%= !status ? 'active' : '' %>">All</a>
+  <% Object.entries(STATUS_LABELS).forEach(([k, label]) => { %>
+    <a href="/admin/orders?status=<%= k %>" class="<%= status === k ? 'active' : '' %>"><%= label %></a>
+  <% }) %>
+</nav>
+<div class="panel">
+<% if (!orders.length) { %><p class="muted">No orders here.</p><% } else { %>
+<table class="table">
+  <thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th></tr></thead>
+  <tbody>
+  <% orders.forEach(o => { %>
+    <tr>
+      <td><a href="/admin/orders/<%= o.id %>"><strong><%= o.order_no %></strong></a><div class="muted small"><%= ist(o.created_at) %></div></td>
+      <td><%= o.customer_name %><div class="muted small"><%= o.phone %> · <%= o.city %></div></td>
+      <td><%= money(o.subtotal) %></td>
+      <td><strong><%= money(o.total) %></strong></td>
+      <td><%= o.payment_method === 'cod' ? 'COD' : 'Online' %><div class="small <%= o.payment_status === 'paid' ? 'ok' : 'muted' %>"><%= o.payment_status %></div></td>
+      <td><span class="pill pill-<%= o.status %>"><%= STATUS_LABELS[o.status] %></span></td>
+    </tr>
+  <% }) %>
+  </tbody>
+</table>
+<% } %>
+</div>
+<%- include('_footer') %>

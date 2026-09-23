@@ -1,0 +1,57 @@
+<%- include('../partials/header') %>
+
+<section class="wrap section narrow prose">
+  <h1 class="page-title"><%= title %></h1>
+
+  <% if (page === 'about') { %>
+    <p><%= shop.name %> is a family-run cloth shop. For years customers have come to our store for dress materials and kurti fabrics, and this Navratri we have added chaniya cholis, Navratri blouses and ghagras.</p>
+    <p>Everything you see online is picked by hand from the same shelves as our store, so what you order is what our regular customers buy in person.</p>
+    <p>Visit us at <%= shop.address %> (<%= shop.hours %>) or shop right here with delivery across India.</p>
+
+  <% } else if (page === 'contact') { %>
+    <p>We're happy to help with fabric questions, sizes, stitching or your order.</p>
+    <ul>
+      <li>Phone: <a href="tel:<%= shop.phone.replace(/\s/g, '') %>"><%= shop.phone %></a></li>
+      <li>WhatsApp: <a href="https://wa.me/<%= shop.whatsapp %>" target="_blank" rel="noopener">Chat with us</a></li>
+      <li>Email: <a href="mailto:<%= shop.email %>"><%= shop.email %></a></li>
+      <li>Store: <%= shop.address %></li>
+      <li>Hours: <%= shop.hours %></li>
+    </ul>
+
+  <% } else if (page === 'shipping') { %>
+    <p>We deliver across India.</p>
+    <ul>
+      <li>Orders are packed and dispatched within 1 to 2 working days.</li>
+      <li>Delivery usually takes 3 to 7 working days depending on your location.</li>
+      <li>Shipping is free on orders of <%= money(shipping.freeAbove) %> and above. Below that, a flat <%= money(shipping.fee) %> is charged.</li>
+      <li>Cash on Delivery is available on most PIN codes.</li>
+      <li>Once shipped, we share the courier name and tracking number on your order page and by WhatsApp.</li>
+    </ul>
+
+  <% } else if (page === 'returns') { %>
+    <ul>
+      <li>You can return unused, unwashed and unstitched items with original tags within 7 days of delivery.</li>
+      <li>Fabric that has been cut or stitched, and items bought on final sale, cannot be returned.</li>
+      <li>To start a return, message us on WhatsApp or call with your order number and a photo of the item.</li>
+      <li>Once we receive and check the item, refunds for online payments go back to the original payment method within 5 to 7 working days. Cash on Delivery orders are refunded by UPI or bank transfer.</li>
+      <li>If you received a damaged or wrong item, tell us within 48 hours of delivery and we will replace it at no cost.</li>
+    </ul>
+
+  <% } else if (page === 'privacy') { %>
+    <p>We collect only what we need to deliver your order: your name, phone, email and address. We use it to process and ship your order and to contact you about it.</p>
+    <p>Online payments are handled by Razorpay. We never see or store your card or UPI details.</p>
+    <p>We do not sell or share your details with anyone except the courier delivering your parcel. To have your data removed, contact us at <%= shop.email %>.</p>
+
+  <% } else if (page === 'terms') { %>
+    <p>By using this website and placing an order you agree to these terms.</p>
+    <ul>
+      <li>All prices are in Indian Rupees and include applicable taxes.</li>
+      <li>Colours may look slightly different on screen than in person due to lighting and display settings.</li>
+      <li>Orders are confirmed once payment succeeds, or immediately for Cash on Delivery. We may cancel an order if an item is unavailable, and will refund any payment in full.</li>
+      <li>Returns and refunds follow our <a href="/returns">returns policy</a>.</li>
+      <li>For any dispute, the courts of our store's city have jurisdiction.</li>
+    </ul>
+  <% } %>
+</section>
+
+<%- include('../partials/footer') %>
