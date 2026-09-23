@@ -24,7 +24,7 @@ tracking number shown to the customer.
 
 ## Run it on your computer
 
-Needs Node.js 22.5 or newer.
+Needs Node.js 22.13 or newer.
 
 ```bash
 npm install
@@ -42,7 +42,12 @@ Replace them with real photos from `/admin`. Run the tests with `npm test`.
    Key Secret into `.env`. Start with `rzp_test_` keys to try payments without real money.
    Add a webhook at `https://your-domain/payment/webhook` for `payment.captured` and
    `order.paid`, and put its secret in `RAZORPAY_WEBHOOK_SECRET`.
-3. **Hosting:** any host that runs Node.js with a persistent disk works (for example a small
+3. **Hosting on Render:** the `render.yaml` file at the top of the repository sets everything
+   up. In Render choose New > Blueprint, pick this repository, enter `ADMIN_PASSWORD` when asked
+   and click Apply. It starts on Render's free plan as a preview: the free plan has no disk, so
+   orders, added products and photos are wiped whenever the service restarts. Before taking real
+   orders, follow the note at the top of `render.yaml` to move to the paid plan with a 1 GB disk
+   (about $7.25 a month). Other hosts: any host that runs Node.js with a persistent disk works (for example a small
    VPS, Render or Railway with a volume). Keep `data/` (the database) and `uploads/`
    (product photos) on the persistent disk and back them up.
 4. **Domain and HTTPS:** point your domain at the host and set `BASE_URL=https://your-domain`.
