@@ -1,0 +1,49 @@
+# Render Blueprint for the ParasmaniNX online shop (the Node.js app in website/).
+# In Render: New > Blueprint > pick this repository > fill in ADMIN_PASSWORD > Apply.
+#
+# This is a FREE PREVIEW setup. Render's free plan has no persistent disk, so the
+# database (orders, products you add) and uploaded photos are wiped whenever the
+# service restarts or redeploys, and the site sleeps after 15 idle minutes.
+# Before taking real orders, switch to the paid setup: change `plan` to 0.5c-512mb
+# and uncomment the `disk` block and the DB_FILE / UPLOAD_DIR variables below.
+services:
+  - type: web
+    name: parasmaninx-shop
+    runtime: node
+    rootDir: website
+    region: singapore        # closest Render region to India
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /
+    # disk:
+    #   name: shop-data
+    #   mountPath: /var/data
+    #   sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "22"
+      # - key: DB_FILE
+      #   value: /var/data/shop.db
+      # - key: UPLOAD_DIR
+      #   value: /var/data/uploads
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: ADMIN_PASSWORD
+        sync: false          # Render asks for this when you create the service
+      - key: SHOP_PHONE
+        value: "+91 98765 43210"
+      - key: SHOP_WHATSAPP
+        value: "919876543210"
+      - key: SHOP_EMAIL
+        value: hello@parasmaninx.in
+      - key: SHOP_ADDRESS
+        value: Shop address, City, State, PIN
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: RAZORPAY_WEBHOOK_SECRET
+        sync: false

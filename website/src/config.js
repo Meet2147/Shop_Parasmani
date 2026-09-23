@@ -18,7 +18,8 @@ const rupees = (key, fallback) => Math.round(Number(env(key, fallback)) * 100);
 
 const config = {
   port: Number(env('PORT', 3000)),
-  baseUrl: env('BASE_URL', `http://localhost:${env('PORT', 3000)}`),
+  // Render sets RENDER_EXTERNAL_URL automatically, so BASE_URL is optional there.
+  baseUrl: env('BASE_URL', env('RENDER_EXTERNAL_URL', `http://localhost:${env('PORT', 3000)}`)),
   secret: env('SESSION_SECRET', ''),
   adminPassword: env('ADMIN_PASSWORD', ''),
   dbFile: env('DB_FILE', path.join(__dirname, '..', 'data', 'shop.db')),
