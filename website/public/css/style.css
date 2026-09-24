@@ -425,3 +425,17 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--m
 @media (max-width: 720px) {
   .wm { font-size: 1.3rem; }
 }
+
+/* ---------- Phone fixes ---------- */
+/* Grid columns default to their content's min width, so a long thumbnail row or email pushed pages wider than the phone */
+.product > *, .footer-grid > * { min-width: 0; }
+.site-footer a { overflow-wrap: break-word; }
+@media (max-width: 720px) {
+  /* iOS zooms the page into any form control under 16px */
+  input, select, textarea { font-size: 16px; }
+  /* Bigger tap targets for footer links */
+  .site-footer .footer-grid a { padding: 6px 0; }
+  .whatsapp-fab { width: 50px; height: 50px; right: 14px; bottom: 14px; }
+  .whatsapp-fab svg { width: 26px; height: 26px; }
+  .footer-bottom { padding-bottom: 80px; }
+}
