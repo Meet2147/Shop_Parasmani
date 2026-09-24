@@ -307,8 +307,6 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--m
 .site-header { border-bottom: 0; }
 .site-header .toran { position: absolute; left: 0; right: 0; bottom: -30px; pointer-events: none; }
 .logo { color: var(--maroon); }
-.logo span { font-family: var(--serif); font-weight: 400; letter-spacing: .01em; }
-.logo small { display: block; font-family: var(--sans); font-size: .62rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: var(--rani); margin-top: -4px; }
 .cat-nav a.active { background: linear-gradient(135deg, var(--rani), var(--maroon)); }
 .cat-nav a.festive::before { content: '✺ '; color: var(--rani); }
 
@@ -389,29 +387,38 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--m
 }
 
 
-/* ---------- Animated Parasmani logo ---------- */
-:root { --peacock: #0b4f6c; --peacock-light: #0e8a8f; }
-.logo .logo-mark { width: 40px; height: 43px; overflow: visible; }
-.logo span { color: var(--peacock); }
+/* ---------- Parasmani logo ----------
+   One system: the dancer and "Parasmani" in peacock blue, the dupatta and "Nx" in rani pink.
+   The wordmark uses a clean sans so the brand stays timeless while the page around it is festive. */
+:root { --peacock: #0b4f6c; }
+.logo { gap: 8px; }
+.logo .logo-mark { width: 38px; height: 41px; overflow: visible; }
+.wm { font-family: var(--sans); font-weight: 800; font-size: 1.5rem; letter-spacing: -.025em; line-height: 1; }
+.wm-base { color: var(--peacock); }
+.wm-nx { color: var(--rani); }
+/* Draw in once, dance two short beats, then rest. Hover to dance again. */
 .logo-mark .lm-stroke { stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0; animation: lm-draw .9s cubic-bezier(.6, 0, .3, 1) both; }
 .logo-mark .lm-leg-r { animation-delay: .15s; }
-.logo-mark .lm-arms { animation-delay: .45s; }
-.logo-mark .lm-head { animation-delay: .7s; }
-/* After drawing in, the dancer sways from the feet and the dupatta waves */
-.logo-mark .lm-body { transform-box: view-box; transform-origin: 32px 58px; animation: lm-sway 3.2s ease-in-out 1.6s infinite; }
+.logo-mark .lm-body { transform-box: view-box; transform-origin: 32px 58px; animation: lm-sway 1.4s ease-in-out 1.5s 2; }
 .logo-mark .lm-arms, .logo-mark .lm-head { transform-box: fill-box; transform-origin: 50% 100%; }
-.logo-mark .lm-arms { animation: lm-draw .9s cubic-bezier(.6, 0, .3, 1) .45s both, lm-wave 1.6s ease-in-out 1.6s infinite; }
-.logo-mark .lm-head { animation: lm-draw .9s cubic-bezier(.6, 0, .3, 1) .7s both, lm-bob 1.6s ease-in-out 1.6s infinite; }
-.logo:hover .logo-mark .lm-body { animation-duration: 1s; }
+.logo-mark .lm-arms { animation: lm-draw .9s cubic-bezier(.6, 0, .3, 1) .45s both, lm-wave .7s ease-in-out 1.5s 4; }
+.logo-mark .lm-head { animation: lm-draw .9s cubic-bezier(.6, 0, .3, 1) .7s both, lm-bob .7s ease-in-out 1.5s 4; }
+.logo:hover .logo-mark .lm-body { animation: lm-sway 1.4s ease-in-out infinite; }
+.logo:hover .logo-mark .lm-arms { animation: lm-wave .7s ease-in-out infinite; }
 /* Round caps would show as dots before drawing starts, so fade in on the first frame */
 @keyframes lm-draw { 0% { stroke-dashoffset: 1; opacity: 0; } 2% { opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 1; } }
-@keyframes lm-sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
-@keyframes lm-wave { 0%, 100% { transform: rotate(-5deg) translateY(0); } 50% { transform: rotate(5deg) translateY(-.6px); } }
+@keyframes lm-sway { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-3deg); } 75% { transform: rotate(3deg); } }
+@keyframes lm-wave { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(6deg) translateY(-.6px); } }
 @keyframes lm-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-.8px); } }
-.footer-logo { display: flex; align-items: center; gap: 10px; }
-.footer-logo .logo-mark { width: 40px; height: 43px; overflow: visible; }
-.footer-logo .logo-mark .lm-stroke { stroke: #7fd6d8; }
-.footer-logo .logo-mark .lm-arms { stroke: var(--marigold); }
+.footer-logo { display: flex; align-items: center; gap: 8px; }
+.footer-logo .logo-mark { width: 38px; height: 41px; overflow: visible; }
+.footer-logo .logo-mark .lm-leg-l, .footer-logo .logo-mark .lm-leg-r, .footer-logo .logo-mark .lm-head { stroke: #8fd3e0; }
+.footer-logo .wm-base { color: #fff; }
+.footer-logo .wm-nx { color: #ff5fa8; }
 @media (prefers-reduced-motion: reduce) {
-  .logo-mark .lm-stroke, .logo-mark .lm-body, .logo-mark .lm-arms, .logo-mark .lm-head { animation: none; stroke-dashoffset: 0; opacity: 1; }
+  .logo-mark .lm-stroke, .logo-mark .lm-body, .logo-mark .lm-arms, .logo-mark .lm-head,
+  .logo:hover .logo-mark .lm-body, .logo:hover .logo-mark .lm-arms { animation: none; stroke-dashoffset: 0; opacity: 1; }
+}
+@media (max-width: 720px) {
+  .wm { font-size: 1.3rem; }
 }

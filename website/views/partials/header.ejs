@@ -22,8 +22,8 @@
   <header class="site-header">
     <div class="wrap header-row">
       <a class="logo" href="/" aria-label="<%= shop.name %> home">
-        <%- include('logo-mark', { markId: 'header' }) %>
-        <span><%= shop.name %><small>Garba Enthu</small></span>
+        <%- include('logo-mark') %>
+        <%- include('wordmark') %>
       </a>
       <form class="search" action="/shop" method="get" role="search">
         <input type="search" name="q" placeholder="Search chaniya choli, cotton, bandhani…" value="<%= typeof search !== 'undefined' ? search : '' %>" aria-label="Search products">
