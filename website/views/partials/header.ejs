@@ -8,16 +8,20 @@
   <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700;800&family=Playfair+Display:wght@600;700&family=Yatra+One&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-  <div class="announce">Free shipping above <%= money(freeShippingAbove) %> <span class="dot">•</span> Cash on Delivery available <span class="dot">•</span> Navratri collection is live</div>
+  <% const tickerItems = ['Garba Enthu is ON', 'Navratri collection is live', `Free shipping above ${money(freeShippingAbove)}`, 'Cash on Delivery available', 'Mirror work, Kutchi patchwork and gota borders'] %>
+  <div class="announce"><div class="announce-track">
+    <%# Two copies so the ticker loops seamlessly; the second is hidden from screen readers. %>
+    <% [false, true].forEach(copy => { %><span<%- copy ? ' aria-hidden="true"' : '' %>><% tickerItems.forEach(t => { %><%= t %> <span class="dot">✦</span> <% }) %></span><% }) %>
+  </div></div>
   <header class="site-header">
     <div class="wrap header-row">
       <a class="logo" href="/" aria-label="<%= shop.name %> home">
-        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#7a1230"/><path d="M20 7 L24 16 L33 20 L24 24 L20 33 L16 24 L7 20 L16 16Z" fill="#e8a317"/><circle cx="20" cy="20" r="4" fill="#fbf6ee"/></svg>
-        <span><%= shop.name %></span>
+        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#7a1230"/><path d="M20 7 L24 16 L33 20 L24 24 L20 33 L16 24 L7 20 L16 16Z" fill="#e8a317"/><circle cx="20" cy="20" r="4" fill="#fbf6ee"/><circle cx="20" cy="4.5" r="2" fill="#e0217a"/><circle cx="20" cy="35.5" r="2" fill="#e0217a"/><circle cx="4.5" cy="20" r="2" fill="#0f9b9b"/><circle cx="35.5" cy="20" r="2" fill="#0f9b9b"/></svg>
+        <span><%= shop.name %><small>Garba Enthu</small></span>
       </a>
       <form class="search" action="/shop" method="get" role="search">
         <input type="search" name="q" placeholder="Search chaniya choli, cotton, bandhani…" value="<%= typeof search !== 'undefined' ? search : '' %>" aria-label="Search products">
@@ -37,6 +41,7 @@
         <a href="/track" class="<%= path === '/track' ? 'active' : '' %>">Track order</a>
       </div>
     </nav>
+    <div class="toran" aria-hidden="true"></div>
   </header>
   <% if (flash) { %>
     <div class="wrap"><div class="flash flash-<%= flash.type %>" role="status"><%= flash.message %></div></div>

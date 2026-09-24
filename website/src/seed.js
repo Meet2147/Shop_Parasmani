@@ -1,5 +1,6 @@
-// Sample catalogue so the shop has something to show before real photos are added.
-// Images are generated SVG illustrations; replace them from the admin panel with real photos.
+// Starting catalogue. The Garba products at the end use real photos from the shop plus model
+// photos made from them; the rest are samples with generated SVG illustrations that can be
+// replaced from the admin panel.
 const fs = require('node:fs');
 const path = require('node:path');
 const { db, transaction } = require('./db');
@@ -182,6 +183,20 @@ const PRODUCTS = [
   P('Lavender Bandhani Kurti Fabric', 'Kurti Materials', 699, 899, 'Cotton bandhani', 'Lavender', 'kurti', 'bandhani',
     { bg: '#8e7cc3', fg: '#ffffff', acc: '#f7d774', deep: '#4a3b82' }, { stock: 2,
       description: 'Hand-tied bandhani in a soft lavender shade. Limited pieces. 2.5 metres.' }),
+
+  // Real pieces from the shop. Listed last so they get the newest ids and lead the home page.
+  P('Orange Mirror Work Kutchi Chaniya Choli', 'Chaniya Choli', 3999, 5499, 'Cotton with Kutchi patchwork and mirror work', 'Orange and rani pink', null, null, null, {
+    sizes: BLOUSE, featured: 1, stock: 6,
+    images: ['model-studio-1.jpg', 'shop-choli-ghagra-front.jpg', 'model-choli-closeup.jpg', 'model-garba-night-1.jpg', 'shop-choli-embroidery.jpg', 'model-studio-3.jpg'],
+    description: 'Our showstopper for Garba nights. A stitched bustier choli covered in Kutchi patchwork, animal and floral motifs and real mirror work, with a sweetheart neckline and thin embroidered straps.\n\nPaired with a wide-ghera kali ghagra in orange and rani pink panels, finished with a gold gota border that shines with every twirl.\n\nThe second and fifth photos show the actual piece at our shop; the model photos show how it looks when worn.' }),
+  P('Kutchi Patchwork Mirror Work Bustier Blouse', 'Navratri Blouses', 1799, 2499, 'Cotton with Kutchi patchwork and mirror work', 'Orange multicolour', null, null, null, {
+    sizes: BLOUSE, featured: 1, stock: 8,
+    images: ['model-choli-closeup.jpg', 'shop-choli-closeup.jpg', 'shop-choli-embroidery.jpg', 'shop-choli-front.jpg'],
+    description: 'The same hand-worked bustier choli, sold on its own. Orange base with colourful Kutchi patches, mirrors all over the cups and embroidered straps.\n\nWear it with any plain or bandhani ghagra for an instant Garba look.' }),
+  P('Orange and Rani Pink Kali Ghagra with Gota Border', 'Ghagras', 1999, 2799, 'Cotton', 'Orange and rani pink', null, null, null, {
+    sizes: FREE, featured: 1, stock: 8,
+    images: ['model-garba-night-2.jpg', 'shop-ghagra-gota-border.jpg', 'model-studio-2.jpg', 'shop-full-look-angle.jpg'],
+    description: 'Kali ghagra in alternating orange and rani pink panels with gold gota lines and a triple gota border at the hem. Wide ghera for big garba twirls, drawstring waist.' }),
 ];
 
 function seed() {
@@ -196,20 +211,21 @@ function seed() {
     }
     for (const p of PRODUCTS) {
       const slug = slugify(p.name);
-      const file = `${slug}.svg`;
-      fs.writeFileSync(path.join(IMG_DIR, file), fabricSvg(p.shape, p.pattern, p.colors));
+      p.urls = p.images ? p.images.map((f) => `/static/img/products/garba/${f}`) : [`/static/img/products/${slug}.svg`];
+      if (!p.images) fs.writeFileSync(path.join(IMG_DIR, `${slug}.svg`), fabricSvg(p.shape, p.pattern, p.colors));
       db.prepare(`INSERT OR IGNORE INTO products (slug, name, category_id, price, mrp, fabric, color, description, sizes, stock, images, featured)
                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
         .run(slug, p.name, catIds[p.cat], p.price * 100, p.mrp * 100, p.fabric, p.color, p.description || '', p.sizes || '',
-          p.stock ?? 10, JSON.stringify([`/static/img/products/${file}`]), p.featured || 0);
+          p.stock ?? 10, JSON.stringify(p.urls), p.featured || 0);
     }
-    // Category tiles reuse the first product image in each category.
+    // Category tiles use a real photo when the category has one, else the first product image.
     for (const c of CATEGORIES) {
-      const first = PRODUCTS.find((p) => p.cat === c.name);
-      db.prepare('UPDATE categories SET image = ? WHERE id = ?').run(`/static/img/products/${slugify(first.name)}.svg`, catIds[c.name]);
+      const inCat = PRODUCTS.filter((p) => p.cat === c.name);
+      const pick = inCat.find((p) => p.images) || inCat[0];
+      db.prepare('UPDATE categories SET image = ? WHERE id = ?').run(pick.urls[0], catIds[c.name]);
     }
   });
-  console.log(`Seeded ${CATEGORIES.length} categories and ${PRODUCTS.length} sample products.`);
+  console.log(`Seeded ${CATEGORIES.length} categories and ${PRODUCTS.length} products.`);
 }
 
 if (require.main === module) seed();
