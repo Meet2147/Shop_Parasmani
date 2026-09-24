@@ -34,13 +34,13 @@ services:
       - key: ADMIN_PASSWORD
         sync: false          # Render asks for this when you create the service
       - key: SHOP_PHONE
-        value: "+91 98765 43210"
+        value: "+91 99694 95026"
       - key: SHOP_WHATSAPP
-        value: "919876543210"
+        value: "919969495026"
       - key: SHOP_EMAIL
         value: hello@parasmaninx.in
       - key: SHOP_ADDRESS
-        value: Shop address, City, State, PIN
+        value: Lakshminarayan Temple Wadi, Mahatma Gandhi Rd, opposite Gandhi Market, Mumbai, Maharashtra 400077
       - key: RAZORPAY_KEY_ID
         sync: false
       - key: RAZORPAY_KEY_SECRET
