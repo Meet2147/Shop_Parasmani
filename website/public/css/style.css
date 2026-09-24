@@ -388,3 +388,30 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--m
   .look figcaption, .look .look-cap { font-size: .85rem; padding: 28px 10px 10px; }
 }
 
+
+/* ---------- Animated Parasmani logo ---------- */
+:root { --peacock: #0b4f6c; --peacock-light: #0e8a8f; }
+.logo .logo-mark { width: 40px; height: 43px; overflow: visible; }
+.logo span { color: var(--peacock); }
+.logo-mark .lm-stroke { stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0; animation: lm-draw .9s cubic-bezier(.6, 0, .3, 1) both; }
+.logo-mark .lm-leg-r { animation-delay: .15s; }
+.logo-mark .lm-arms { animation-delay: .45s; }
+.logo-mark .lm-head { animation-delay: .7s; }
+/* After drawing in, the dancer sways from the feet and the dupatta waves */
+.logo-mark .lm-body { transform-box: view-box; transform-origin: 32px 58px; animation: lm-sway 3.2s ease-in-out 1.6s infinite; }
+.logo-mark .lm-arms, .logo-mark .lm-head { transform-box: fill-box; transform-origin: 50% 100%; }
+.logo-mark .lm-arms { animation: lm-draw .9s cubic-bezier(.6, 0, .3, 1) .45s both, lm-wave 1.6s ease-in-out 1.6s infinite; }
+.logo-mark .lm-head { animation: lm-draw .9s cubic-bezier(.6, 0, .3, 1) .7s both, lm-bob 1.6s ease-in-out 1.6s infinite; }
+.logo:hover .logo-mark .lm-body { animation-duration: 1s; }
+/* Round caps would show as dots before drawing starts, so fade in on the first frame */
+@keyframes lm-draw { 0% { stroke-dashoffset: 1; opacity: 0; } 2% { opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes lm-sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes lm-wave { 0%, 100% { transform: rotate(-5deg) translateY(0); } 50% { transform: rotate(5deg) translateY(-.6px); } }
+@keyframes lm-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-.8px); } }
+.footer-logo { display: flex; align-items: center; gap: 10px; }
+.footer-logo .logo-mark { width: 40px; height: 43px; overflow: visible; }
+.footer-logo .logo-mark .lm-stroke { stroke: #7fd6d8; }
+.footer-logo .logo-mark .lm-arms { stroke: var(--marigold); }
+@media (prefers-reduced-motion: reduce) {
+  .logo-mark .lm-stroke, .logo-mark .lm-body, .logo-mark .lm-arms, .logo-mark .lm-head { animation: none; stroke-dashoffset: 0; opacity: 1; }
+}
