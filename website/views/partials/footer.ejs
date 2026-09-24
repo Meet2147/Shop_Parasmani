@@ -1,8 +1,9 @@
   </main>
   <footer class="site-footer">
+    <div class="toran" aria-hidden="true"></div>
     <div class="wrap footer-grid">
       <div>
-        <div class="footer-logo"><%= shop.name %></div>
+        <div class="footer-logo"><%- include('logo-mark', { markId: 'footer' }) %><span><%= shop.name %></span></div>
         <p><%= shop.tagline %>. Visit our store or shop online, delivered across India.</p>
         <p class="muted small"><%= shop.address %><br><%= shop.hours %></p>
       </div>

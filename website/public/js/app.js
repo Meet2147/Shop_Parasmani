@@ -17,6 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Filters submit as soon as they change
   document.querySelectorAll('[data-autosubmit]').forEach((el) => el.addEventListener('change', () => el.form.submit()));
 
+  // Respect reduced-motion: keep the garba videos still
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('video[autoplay]').forEach((v) => { v.removeAttribute('autoplay'); v.pause(); v.controls = true; });
+  }
+
   // Confirm destructive admin actions
   document.querySelectorAll('[data-confirm]').forEach((el) => el.addEventListener('submit', (e) => {
     if (!confirm(el.dataset.confirm)) e.preventDefault();

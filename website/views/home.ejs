@@ -1,20 +1,33 @@
 <%- include('partials/header') %>
 
-<section class="hero">
+<section class="hero garba-hero">
   <div class="wrap hero-grid">
     <div class="hero-text">
-      <span class="eyebrow">Navratri Collection <%= new Date().getFullYear() %></span>
-      <h1>Twirl through all nine nights in colour</h1>
-      <p>Mirror work chaniya cholis, kutchi blouses and wide-ghera ghagras, hand-picked at our store and now delivered to your door.</p>
+      <span class="eyebrow">Navratri <%= new Date().getFullYear() %> Collection</span>
+      <h1>Garba Enthu is <span class="hl">ON!</span></h1>
+      <p>Mirror work chaniya cholis, Kutchi patchwork blouses and wide-ghera ghagras, hand-picked at our shop and ready for all nine nights of garba.</p>
       <div class="hero-cta">
         <a class="btn btn-primary" href="/c/chaniya-choli">Shop Chaniya Choli</a>
-        <a class="btn btn-ghost" href="/c/dress-materials">Dress materials</a>
+        <a class="btn btn-ghost" href="/c/navratri-blouses">Navratri blouses</a>
       </div>
+      <ul class="hero-points">
+        <li>Real mirror work</li>
+        <li>Cash on Delivery</li>
+        <li>Free shipping above <%= money(freeShippingAbove) %></li>
+      </ul>
     </div>
-    <div class="hero-art" aria-hidden="true">
-      <% festive.slice(0, 3).forEach((p, i) => { %>
-        <img class="hero-img hero-img-<%= i %>" src="<%= p.images[0] %>" alt="">
-      <% }) %>
+    <div class="hero-media">
+      <div class="mirror-frame">
+        <video autoplay muted loop playsinline preload="metadata" poster="/static/video/garba-dance-poster.jpg" aria-label="Model dancing garba in our mirror work chaniya choli">
+          <source src="/static/video/garba-dance.mp4" type="video/mp4">
+        </video>
+      </div>
+      <span class="hero-badge">New Garba drop</span>
+      <svg class="hero-dandiya" viewBox="0 0 120 120" aria-hidden="true">
+        <g stroke-linecap="round"><path d="M18 104 L96 20" stroke="#e0217a" stroke-width="9"/><path d="M102 104 L24 20" stroke="#f5a623" stroke-width="9"/></g>
+        <g stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M30 91 l6 -6 M42 78 l6 -6 M54 65 l6 -6"/><path d="M90 91 l-6 -6 M78 78 l-6 -6 M66 65 l-6 -6"/></g>
+        <circle cx="97" cy="18" r="8" fill="#0f9b9b"/><circle cx="23" cy="18" r="8" fill="#0f9b9b"/>
+      </svg>
     </div>
   </div>
 </section>
@@ -31,11 +44,38 @@
   </div>
 </section>
 
+<% const looks = festive.filter(p => p.images[0] && !p.images[0].endsWith('.svg')).slice(0, 3) %>
+<% if (looks.length) { %>
+<section class="garba-looks">
+  <div class="wrap section">
+    <div class="section-head">
+      <h2 class="section-title">Ready for Garba night</h2>
+      <a href="/c/chaniya-choli" class="link">See the collection</a>
+    </div>
+    <p class="intro">Our pieces from the shop floor, styled for the dance floor.</p>
+    <div class="looks-grid">
+      <figure class="look">
+        <video autoplay muted loop playsinline preload="metadata" poster="/static/video/twirl-poster.jpg" aria-label="Model twirling in the orange mirror work chaniya choli">
+          <source src="/static/video/twirl.mp4" type="video/mp4">
+        </video>
+        <figcaption>Made for the twirl</figcaption>
+      </figure>
+      <% looks.forEach(p => { %>
+        <a class="look" href="/p/<%= p.slug %>">
+          <img src="<%= p.images[0] %>" alt="<%= p.name %>" loading="lazy">
+          <span class="look-cap"><%= p.name %><small><%= money(p.price) %></small></span>
+        </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
 <% if (festive.length) { %>
 <section class="festive-band">
   <div class="wrap section">
     <div class="section-head">
-      <h2 class="section-title">Navratri special</h2>
+      <h2 class="section-title">Navratri specials</h2>
       <a href="/c/chaniya-choli" class="link">View all</a>
     </div>
     <div class="grid scroll-row">
