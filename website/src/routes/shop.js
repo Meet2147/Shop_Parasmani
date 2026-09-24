@@ -4,6 +4,7 @@ const { db, parseProduct } = require('../db');
 const { loadCart, addToCart, updateCart, syncCart, clearCart } = require('../cart');
 const { createOrder, confirmOrder, getItems, StockError } = require('../orders');
 const razorpay = require('../razorpay');
+const { whatsappOrderText } = require('../notify');
 const { safeEqual, INDIAN_STATES } = require('../util');
 
 const router = express.Router();
@@ -234,7 +235,8 @@ router.post('/payment/verify', (req, res, next) => {
 router.get('/order/:orderNo', (req, res, next) => {
   const order = orderFromLink(req);
   if (!order) return next();
-  res.render('order', { title: `Order ${order.order_no}`, order, items: getItems.all(order.id) });
+  const items = getItems.all(order.id);
+  res.render('order', { title: `Order ${order.order_no}`, order, items, whatsappText: whatsappOrderText(order, items) });
 });
 
 router.get('/track', (req, res) => res.render('track', { title: 'Track your order', error: null, form: {} }));

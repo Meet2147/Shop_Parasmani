@@ -47,3 +47,10 @@ services:
         sync: false
       - key: RAZORPAY_WEBHOOK_SECRET
         sync: false
+      # New-order email alerts (see website/.env.example for setting up Brevo)
+      - key: BREVO_API_KEY
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
+      - key: ORDER_ALERT_EMAIL
+        sync: false

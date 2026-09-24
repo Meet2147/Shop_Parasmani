@@ -47,9 +47,17 @@ const config = {
     keySecret: env('RAZORPAY_KEY_SECRET'),
     webhookSecret: env('RAZORPAY_WEBHOOK_SECRET'),
   },
+
+  // New-order email alerts (see src/notify.js). ORDER_ALERT_EMAIL may list several addresses, comma separated.
+  alerts: {
+    brevoApiKey: env('BREVO_API_KEY'),
+    emailFrom: env('EMAIL_FROM'),
+    to: env('ORDER_ALERT_EMAIL').split(',').map((s) => s.trim()).filter(Boolean),
+  },
 };
 
 config.razorpay.enabled = Boolean(config.razorpay.keyId && config.razorpay.keySecret);
+config.alerts.emailEnabled = Boolean(config.alerts.brevoApiKey && config.alerts.emailFrom && config.alerts.to.length);
 
 if (!config.secret) {
   if (process.env.NODE_ENV === 'production') {
