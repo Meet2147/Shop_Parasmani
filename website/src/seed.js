@@ -1,6 +1,6 @@
-// Starting catalogue. The Garba products at the end use real photos from the shop plus model
-// photos made from them; the rest are samples with generated SVG illustrations that can be
-// replaced from the admin panel.
+// Starting catalogue. The Garba products and kurti fabrics use model photos (and a few real shop
+// photos); the dress materials are samples with generated SVG illustrations that can be replaced
+// from the admin panel.
 const fs = require('node:fs');
 const path = require('node:path');
 const { db, transaction } = require('./db');
@@ -124,40 +124,47 @@ const P = (name, cat, price, mrp, fabric, color, shape, pattern, colors, extra =
 const FREE = 'Free Size';
 const BLOUSE = '32, 34, 36, 38, 40, 42';
 
+// The same mirror-work chaniya choli in more colours, each sold as a full set, the choli alone and the
+// ghagra alone. Photos are model photos in public/img/products/garba/colours/.
+const GARBA_COLOURS = [
+  { key: 'black', name: 'Black', colour: 'Black and maroon', ghagra: 'black and deep maroon panels' },
+  { key: 'red', name: 'Red', colour: 'Red and golden yellow', ghagra: 'red and golden yellow panels' },
+  { key: 'green', name: 'Parrot Green', colour: 'Parrot green, rani pink and orange', ghagra: 'parrot green, rani pink and orange panels' },
+  { key: 'multi', name: 'Multicolour', colour: 'Multicolour', ghagra: 'rainbow panels of red, yellow, green, blue, orange and pink' },
+  { key: 'yellow', name: 'Mustard Yellow', colour: 'Mustard yellow and rani pink', ghagra: 'mustard yellow and rani pink panels' },
+];
+
+const colourSet = (c) => {
+  const img = (shots) => shots.map((s) => `garba/colours/${c.key}-${s}.jpg`);
+  const fabric = 'Cotton with Kutchi patchwork and mirror work';
+  return [
+    P(`${c.name} Mirror Work Kutchi Chaniya Choli`, 'Chaniya Choli', 3999, 5499, fabric, c.colour, null, null, null, {
+      sizes: BLOUSE, stock: 4, images: img(['1-studio', '2-closeup', '3-garba', '4-daylight']),
+      description: `Our mirror-work bustier choli in ${c.colour.toLowerCase()}, covered in Kutchi patchwork and mirrors, with a sweetheart neckline and thin embroidered straps.\n\nPaired with a wide-ghera kali ghagra in ${c.ghagra}, finished with gold gota lines and a gota border at the hem.` }),
+    P(`${c.name} Kutchi Patchwork Mirror Work Bustier Blouse`, 'Navratri Blouses', 1799, 2499, fabric, c.colour, null, null, null, {
+      sizes: BLOUSE, stock: 5, images: img(['2-closeup', '1-studio', '3-garba']),
+      description: `The mirror-work bustier choli on its own, in ${c.colour.toLowerCase()} with colourful Kutchi patches and mirrors all over the cups.\n\nWear it with any plain or bandhani ghagra for an instant Garba look.` }),
+    P(`${c.name} Kali Ghagra with Gota Border`, 'Ghagras', 1999, 2799, 'Cotton', c.colour, null, null, null, {
+      sizes: FREE, stock: 5, images: img(['3-garba', '4-daylight', '1-studio']),
+      description: `Kali ghagra in ${c.ghagra}, with gold gota lines and a gota border at the hem. Wide ghera for big garba twirls, drawstring waist.` }),
+  ];
+};
+
+// Kurti fabrics sold by the piece. Photos show a model in three kurti styles made from each print,
+// then the folded fabric; they are in public/img/products/kurtis/.
+const KURTI_PRINTS = [
+  { key: 'indigo-vine', name: 'Indigo Vine Print Cotton Kurti Fabric', price: 649, mrp: 849, colour: 'Indigo and white', print: 'white vines and diamond motifs in neat vertical rows on deep indigo' },
+  { key: 'teal-maroon-floral', name: 'Teal and Maroon Floral Print Kurti Fabric', price: 699, mrp: 899, colour: 'Teal, maroon and mustard', print: 'maroon flowers and mustard leaves on a dark teal ground' },
+  { key: 'indigo-floral', name: 'Indigo Floral Print Cotton Kurti Fabric', price: 649, mrp: 849, colour: 'Indigo and white', print: 'soft white floral clusters on deep indigo' },
+  { key: 'white-blue-buti', name: 'White and Blue Buti Block Print Kurti Fabric', price: 599, mrp: 799, colour: 'White and blue', print: 'small blue block printed butis on crisp white' },
+  { key: 'black-maroon-paisley', name: 'Black and Maroon Kalamkari Paisley Kurti Fabric', price: 749, mrp: 999, colour: 'Black, maroon and cream', print: 'bold maroon and cream kalamkari paisleys on black' },
+];
+
+const kurtiFabric = (k) => P(k.name, 'Kurti Materials', k.price, k.mrp, 'Cotton', k.colour, null, null, null, {
+  stock: 15, images: ['1-straight', '2-anarkali', '3-short', '4-fabric'].map((s) => `kurtis/${k.key}-${s}.jpg`),
+  description: `A 2.5 metre cotton piece with ${k.print}. Enough for a knee-length kurti with sleeves.\n\nThe photos show three ways to get it stitched: a straight kurti with palazzo, a flared anarkali, and a short kurti with jeans.` });
+
 const PRODUCTS = [
-  P('Rani Pink Mirror Work Chaniya Choli', 'Chaniya Choli', 3499, 4999, 'Cotton with mirror work', 'Rani pink and green', 'chaniya', 'mirror',
-    { bg: '#d6246e', fg: '#1f7a4c', acc: '#c9a227', deep: '#1f7a4c' }, { sizes: FREE, featured: 1, stock: 12,
-      description: 'A festive favourite in rani pink with hand-finished mirror work all over. Comes with a 7 metre ghera chaniya, an unstitched blouse piece with matching mirror lace and a contrast green bandhani dupatta.\n\nThe chaniya has an adjustable drawstring waist and fits waist sizes 26 to 40 inches.' }),
-  P('Royal Blue Bandhani Chaniya Choli', 'Chaniya Choli', 2899, 3799, 'Pure cotton bandhani', 'Royal blue and yellow', 'chaniya', 'bandhani',
-    { bg: '#1c3f94', fg: '#f4c430', acc: '#ffffff', deep: '#8a1538' }, { sizes: FREE, featured: 1, stock: 9,
-      description: 'Traditional hand-tied bandhani in deep royal blue with sunshine yellow dots. Light, breathable cotton that stays comfortable through long garba nights.\n\nIncludes chaniya with 6 metre ghera, blouse piece and dupatta.' }),
-  P('Maroon Kutchi Embroidered Chaniya Choli', 'Chaniya Choli', 5499, 6999, 'Cotton silk with kutchi embroidery', 'Maroon and gold', 'chaniya', 'zari',
-    { bg: '#7a1230', fg: '#e0a82e', acc: '#f7e7b4', deep: '#2b1a4a' }, { sizes: FREE, featured: 1, stock: 5,
-      description: 'Our premium pick. Rich maroon cotton silk with dense kutchi thread embroidery and a wide zari border on a 9 metre ghera.\n\nWith stitched blouse (size can be altered) and a heavy net dupatta.' }),
-  P('Parrot Green Leheriya Chaniya Choli', 'Chaniya Choli', 2299, 2999, 'Rayon leheriya', 'Parrot green and orange', 'chaniya', 'leheriya',
-    { bg: '#5aa832', fg: '#f47b20', acc: '#fff3c4', deep: '#b8235a' }, { sizes: FREE, stock: 15,
-      description: 'Bright and joyful leheriya waves in parrot green and orange. A lightweight set that is easy to carry and dance in.' }),
-
-  P('Black Mirror Work Navratri Blouse', 'Navratri Blouses', 899, 1299, 'Cotton with mirror work', 'Black multicolour', 'blouse', 'mirror',
-    { bg: '#1d1d1f', fg: '#d6246e', acc: '#e8b923', deep: '#b8235a' }, { sizes: BLOUSE, featured: 1, stock: 20,
-      description: 'Ready-made backless-style Navratri blouse with round mirrors and multicolour thread work. Adjustable dori tie at the back with tassels.\n\nGoes with almost every chaniya and ghagra.' }),
-  P('Yellow Kutchi Work Blouse', 'Navratri Blouses', 749, 999, 'Cotton', 'Mustard yellow', 'blouse', 'block',
-    { bg: '#e2a822', fg: '#8a1538', acc: '#1c5e8a', deep: '#8a1538' }, { sizes: BLOUSE, stock: 18,
-      description: 'Mustard yellow cotton blouse with kutchi motifs and short sleeves. Soft cotton lining for all-night comfort.' }),
-  P('Red Gamthi Patch Work Blouse', 'Navratri Blouses', 1099, 1499, 'Cotton gamthi', 'Red and green', 'blouse', 'floral',
-    { bg: '#c62828', fg: '#2e7d32', acc: '#f9d65c', deep: '#1a237e' }, { sizes: BLOUSE, stock: 8,
-      description: 'Colourful gamthi patch work blouse with mirror borders on the neckline and sleeves.' }),
-
-  P('Multicolour Kutchi Ghagra', 'Ghagras', 1899, 2599, 'Cotton', 'Multicolour', 'ghagra', 'block',
-    { bg: '#f2c14e', fg: '#c2185b', acc: '#1e6fa8', deep: '#6d1b3b' }, { sizes: FREE, featured: 1, stock: 10,
-      description: 'Wide 8 metre ghera ghagra with kutchi block motifs and a mirror work border that flares beautifully while you twirl.' }),
-  P('Navy Bandhani Ghagra with Gota Border', 'Ghagras', 2199, 2999, 'Cotton bandhani', 'Navy blue', 'ghagra', 'bandhani',
-    { bg: '#1b2a5c', fg: '#f6d56b', acc: '#e44d8a', deep: '#a31545' }, { sizes: FREE, stock: 7,
-      description: 'Navy bandhani ghagra with a shimmering gota patti border. Drawstring waist fits 26 to 40 inches.' }),
-  P('Orange Leheriya Ghagra', 'Ghagras', 1499, 1999, 'Rayon', 'Orange and pink', 'ghagra', 'leheriya',
-    { bg: '#f57c1f', fg: '#d81b60', acc: '#fff4d6', deep: '#5e1a78' }, { sizes: FREE, stock: 14,
-      description: 'A bright orange leheriya ghagra, light on the waist and easy to style with any blouse.' }),
-
   P('Pastel Pink Chanderi Dress Material', 'Dress Materials', 1650, 2200, 'Chanderi silk', 'Pastel pink', 'dress', 'zari',
     { bg: '#f3b6c5', fg: '#c79a3b', acc: '#ffffff', deep: '#8e3b5a', plain: '#e8a1b3', dupatta: '#f7d5de' }, { featured: 1, stock: 16,
       description: 'Unstitched 3-piece set.\n\nTop: 2.5 metres chanderi with zari butti\nBottom: 2.5 metres cotton\nDupatta: 2.25 metres chanderi with zari border' }),
@@ -171,32 +178,20 @@ const PRODUCTS = [
     { bg: '#6b1233', fg: '#d8a93a', acc: '#d8a93a', deep: '#3b0a1c', plain: '#5a0f2b', dupatta: '#c9a24a' }, { stock: 6,
       description: 'Festive art silk suit set with embroidered yoke and sequin work.\n\nTop: 2.5 metres\nBottom: 2.5 metres\nDupatta: 2.25 metres with embroidered border' }),
 
-  P('Sunflower Yellow Cotton Kurti Fabric', 'Kurti Materials', 499, 650, 'Cotton cambric', 'Yellow', 'kurti', 'floral',
-    { bg: '#f7c948', fg: '#ffffff', acc: '#e0662f', deep: '#8a4b12' }, { featured: 1, stock: 30,
-      description: '2.5 metre cotton cambric piece with a cheerful floral print. Enough for a knee-length kurti with sleeves.' }),
-  P('Teal Rayon Printed Kurti Fabric', 'Kurti Materials', 425, 550, 'Rayon', 'Teal', 'kurti', 'leheriya',
-    { bg: '#127a7a', fg: '#f2d0a4', acc: '#f28c38', deep: '#0c4d4d' }, { stock: 25,
-      description: 'Soft, drapey rayon that stitches beautifully into A-line and anarkali kurtis. 2.5 metre piece.' }),
-  P('Red Checks Handloom Kurti Fabric', 'Kurti Materials', 575, 750, 'Handloom cotton', 'Red and white', 'kurti', 'checks',
-    { bg: '#f5ede0', fg: '#c0392b', acc: '#1d3557', deep: '#c0392b' }, { stock: 18,
-      description: 'Classic handloom checks, woven cotton that gets softer with every wash. 2.5 metre piece.' }),
-  P('Lavender Bandhani Kurti Fabric', 'Kurti Materials', 699, 899, 'Cotton bandhani', 'Lavender', 'kurti', 'bandhani',
-    { bg: '#8e7cc3', fg: '#ffffff', acc: '#f7d774', deep: '#4a3b82' }, { stock: 2,
-      description: 'Hand-tied bandhani in a soft lavender shade. Limited pieces. 2.5 metres.' }),
-
-  // Real pieces from the shop. Listed last so they get the newest ids and lead the home page.
   P('Orange Mirror Work Kutchi Chaniya Choli', 'Chaniya Choli', 3999, 5499, 'Cotton with Kutchi patchwork and mirror work', 'Orange and rani pink', null, null, null, {
     sizes: BLOUSE, featured: 1, stock: 6,
-    images: ['model-studio-1.jpg', 'shop-choli-ghagra-front.jpg', 'model-choli-closeup.jpg', 'model-garba-night-1.jpg', 'shop-choli-embroidery.jpg', 'model-studio-3.jpg'],
-    description: 'Our showstopper for Garba nights. A stitched bustier choli covered in Kutchi patchwork, animal and floral motifs and real mirror work, with a sweetheart neckline and thin embroidered straps.\n\nPaired with a wide-ghera kali ghagra in orange and rani pink panels, finished with a gold gota border that shines with every twirl.\n\nThe second and fifth photos show the actual piece at our shop; the model photos show how it looks when worn.' }),
+    images: ['garba/model-studio-1.jpg', 'garba/model-choli-closeup.jpg', 'garba/model-garba-night-1.jpg', 'garba/model-studio-3.jpg', 'garba/shop-choli-closeup.jpg', 'garba/shop-choli-embroidery.jpg'],
+    description: 'Our showstopper for Garba nights. A stitched bustier choli covered in Kutchi patchwork, animal and floral motifs and real mirror work, with a sweetheart neckline and thin embroidered straps.\n\nPaired with a wide-ghera kali ghagra in orange and rani pink panels, finished with a gold gota border that shines with every twirl.\n\nThe last two photos are close-ups of the actual piece at our shop.' }),
   P('Kutchi Patchwork Mirror Work Bustier Blouse', 'Navratri Blouses', 1799, 2499, 'Cotton with Kutchi patchwork and mirror work', 'Orange multicolour', null, null, null, {
     sizes: BLOUSE, featured: 1, stock: 8,
-    images: ['model-choli-closeup.jpg', 'shop-choli-closeup.jpg', 'shop-choli-embroidery.jpg', 'shop-choli-front.jpg'],
+    images: ['garba/model-choli-closeup.jpg', 'garba/model-studio-1.jpg', 'garba/shop-choli-closeup.jpg', 'garba/shop-choli-embroidery.jpg'],
     description: 'The same hand-worked bustier choli, sold on its own. Orange base with colourful Kutchi patches, mirrors all over the cups and embroidered straps.\n\nWear it with any plain or bandhani ghagra for an instant Garba look.' }),
   P('Orange and Rani Pink Kali Ghagra with Gota Border', 'Ghagras', 1999, 2799, 'Cotton', 'Orange and rani pink', null, null, null, {
     sizes: FREE, featured: 1, stock: 8,
-    images: ['model-garba-night-2.jpg', 'shop-ghagra-gota-border.jpg', 'model-studio-2.jpg', 'shop-full-look-angle.jpg'],
+    images: ['garba/model-garba-night-2.jpg', 'garba/model-studio-2.jpg', 'garba/model-studio-3.jpg'],
     description: 'Kali ghagra in alternating orange and rani pink panels with gold gota lines and a triple gota border at the hem. Wide ghera for big garba twirls, drawstring waist.' }),
+  ...GARBA_COLOURS.flatMap(colourSet),
+  ...KURTI_PRINTS.map(kurtiFabric),
 ];
 
 function seed() {
@@ -211,7 +206,7 @@ function seed() {
     }
     for (const p of PRODUCTS) {
       const slug = slugify(p.name);
-      p.urls = p.images ? p.images.map((f) => `/static/img/products/garba/${f}`) : [`/static/img/products/${slug}.svg`];
+      p.urls = p.images ? p.images.map((f) => `/static/img/products/${f}`) : [`/static/img/products/${slug}.svg`];
       if (!p.images) fs.writeFileSync(path.join(IMG_DIR, `${slug}.svg`), fabricSvg(p.shape, p.pattern, p.colors));
       db.prepare(`INSERT OR IGNORE INTO products (slug, name, category_id, price, mrp, fabric, color, description, sizes, stock, images, featured)
                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)

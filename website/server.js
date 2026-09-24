@@ -33,11 +33,22 @@ app.use((req, res, next) => {
 app.use('/static', express.static(path.join(__dirname, 'public'), { maxAge: '7d' }));
 fs.mkdirSync(config.uploadDir, { recursive: true });
 app.use('/uploads', express.static(config.uploadDir, { maxAge: '30d' }));
+// Browsers, iPhones and search engines ask for these at the site root.
+for (const icon of ['favicon.ico', 'apple-touch-icon.png']) {
+  app.get(`/${icon}`, (req, res) => res.sendFile(path.join(__dirname, 'public', 'img', icon), { maxAge: '7d' }));
+}
+
+// Stylesheets, scripts and the tab icon are cached for 7 days, so their URLs carry a content hash:
+// a changed file gets a new URL and returning visitors see the update straight away.
+const assetVersion = require('node:crypto').createHash('sha1')
+  .update(['css/style.css', 'css/admin.css', 'js/app.js', 'img/favicon.svg'].map((f) => fs.readFileSync(path.join(__dirname, 'public', f))).join(''))
+  .digest('hex').slice(0, 10);
 
 // Values every page template can use.
 const navCategories = db.prepare('SELECT slug, name, is_festive FROM categories ORDER BY sort, name');
 app.use((req, res, next) => {
   res.locals.shop = config.shop;
+  res.locals.assetVersion = assetVersion;
   res.locals.money = money;
   res.locals.ist = ist;
   res.locals.STATUS_LABELS = STATUS_LABELS;
