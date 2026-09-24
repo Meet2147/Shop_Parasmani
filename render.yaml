@@ -38,7 +38,7 @@ services:
       - key: SHOP_WHATSAPP
         value: "919969495026"
       - key: SHOP_EMAIL
-        value: hello@parasmaninx.in
+        value: contact@parasmaninx.in
       - key: SHOP_ADDRESS
         value: Lakshminarayan Temple Wadi, Mahatma Gandhi Rd, opposite Gandhi Market, Mumbai, Maharashtra 400077
       - key: RAZORPAY_KEY_ID
