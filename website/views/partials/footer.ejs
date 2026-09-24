@@ -24,7 +24,7 @@
         <a href="/terms">Terms and conditions</a>
         <a href="/privacy">Privacy policy</a>
         <a href="tel:<%= shop.phone.replace(/\s/g, '') %>"><%= shop.phone %></a>
-        <a href="mailto:<%= shop.email %>"><%= shop.email %></a>
+        <a href="mailto:<%= shop.email %>"><%= shop.email.split('@')[0] %>@<wbr><%= shop.email.split('@').slice(1).join('@') %></a>
       </div>
     </div>
     <div class="wrap footer-bottom">© <%= new Date().getFullYear() %> <%= shop.name %>. All prices in INR, inclusive of taxes.</div>
