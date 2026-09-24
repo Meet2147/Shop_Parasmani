@@ -32,9 +32,9 @@ cp .env.example .env      # then set ADMIN_PASSWORD and SESSION_SECRET
 npm start                 # http://localhost:3000
 ```
 
-The first start fills the shop with 21 products: 3 real Garba pieces from the shop with their
-photos and model photos, plus 18 samples using drawn illustrations. Replace the samples with real
-photos from `/admin`. Run the tests with `npm test`.
+The first start fills the shop with 27 products: the Garba chaniya choli, blouse and ghagra in six
+colours and five kurti fabric prints, all with model photos, plus 4 dress material samples using
+drawn illustrations. Replace the samples with real photos from `/admin`. Run the tests with `npm test`.
 
 ## Going live checklist
 
