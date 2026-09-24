@@ -46,7 +46,11 @@ function client() {
 }
 
 const customer = { name: 'Priya Shah', phone: '9825012345', email: '', address1: '12 Shanti Nagar', city: 'Ahmedabad', state: 'Gujarat', pincode: '380009' };
-const product = () => db.prepare("SELECT * FROM products WHERE slug = 'black-mirror-work-navratri-blouse'").get();
+// A fixed product for these tests, so they don't depend on the starting catalogue.
+db.prepare(`INSERT OR IGNORE INTO products (slug, name, category_id, price, mrp, sizes, stock, images)
+            VALUES ('test-navratri-blouse', 'Test Navratri Blouse', (SELECT id FROM categories ORDER BY sort LIMIT 1),
+                    89900, 129900, '32, 34, 36, 38, 40, 42', 20, '[]')`).run();
+const product = () => db.prepare("SELECT * FROM products WHERE slug = 'test-navratri-blouse'").get();
 
 test('online payment: verified signature confirms the order and reduces stock', async () => {
   const c = client();
