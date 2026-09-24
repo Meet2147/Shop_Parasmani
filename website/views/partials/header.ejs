@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><%= title %><%= title.includes(shop.name) ? '' : ` | ${shop.name}` %></title>
   <meta name="description" content="<%= shop.name %>: <%= shop.tagline %>. Shop chaniya choli, Navratri blouses, ghagras, dress materials and kurti fabrics online.">
-  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.ico?v=<%= assetVersion %>" sizes="48x48">
+  <link rel="icon" href="/static/img/favicon.svg?v=<%= assetVersion %>" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=<%= assetVersion %>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700;800&family=Playfair+Display:wght@600;700&family=Yatra+One&display=swap" rel="stylesheet">

@@ -28,10 +28,10 @@ const config = {
   shop: {
     name: env('SHOP_NAME', 'ParasmaniNX'),
     tagline: env('SHOP_TAGLINE', 'Dress materials, kurti fabrics and Navratri wear'),
-    phone: env('SHOP_PHONE', '+91 98765 43210'),
-    whatsapp: env('SHOP_WHATSAPP', '919876543210'),
+    phone: env('SHOP_PHONE', '+91 99694 95026'),
+    whatsapp: env('SHOP_WHATSAPP', '919969495026'),
     email: env('SHOP_EMAIL', 'hello@parasmaninx.in'),
-    address: env('SHOP_ADDRESS', 'Shop address, City, State, PIN'),
+    address: env('SHOP_ADDRESS', 'Lakshminarayan Temple Wadi, Mahatma Gandhi Rd, opposite Gandhi Market, Mumbai, Maharashtra 400077'),
     hours: env('SHOP_HOURS', 'Mon to Sat, 10:30 AM to 8:30 PM'),
   },
 
