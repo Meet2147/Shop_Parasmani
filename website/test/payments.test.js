@@ -12,11 +12,17 @@ Object.assign(process.env, {
   DB_FILE: path.join(tmp, 'test.db'), UPLOAD_DIR: path.join(tmp, 'uploads'),
   RAZORPAY_KEY_ID: 'rzp_test_x', RAZORPAY_KEY_SECRET: 'secret123', RAZORPAY_WEBHOOK_SECRET: 'whsecret',
   ADMIN_PASSWORD: 'pw', SESSION_SECRET: 'test-secret',
+  BREVO_API_KEY: 'brevo-test', EMAIL_FROM: 'shop@example.com', ORDER_ALERT_EMAIL: 'owner@example.com',
 });
 
 const realFetch = global.fetch;
 let rzCount = 0;
+const emails = []; // order alert emails "sent" through the mocked Brevo API
 global.fetch = async (url, opts) => {
+  if (String(url) === 'https://api.brevo.com/v3/smtp/email') {
+    emails.push(JSON.parse(opts.body));
+    return new Response('{"messageId":"m"}', { status: 201 });
+  }
   if (String(url).startsWith('https://api.razorpay.com/')) {
     const body = JSON.parse(opts.body);
     return new Response(JSON.stringify({ id: `order_test${++rzCount}`, amount: body.amount, currency: 'INR' }), { status: 200 });
@@ -83,6 +89,12 @@ test('online payment: verified signature confirms the order and reduces stock', 
   await c('/payment/verify', { form: { razorpay_order_id: order.razorpay_order_id, razorpay_payment_id: 'pay_1', razorpay_signature: sig } });
   assert.equal(product().stock, before - 2);
   assert.equal((await (await c('/cart')).text()).includes('Your cart is empty'), true);
+
+  // Exactly one alert email for this order, even though it was confirmed twice
+  const alerts = emails.filter((e) => e.subject.includes(order.order_no));
+  assert.equal(alerts.length, 1);
+  assert.deepEqual(alerts[0].to, [{ email: 'owner@example.com' }]);
+  assert.match(alerts[0].subject, /paid online/);
 });
 
 test('webhook confirms a paid order when the customer never returned', async () => {
@@ -113,7 +125,18 @@ test('cash on delivery confirms immediately; tampered cart cookie is ignored', a
   assert.equal(order.phone, '9825012345');
   // Order page needs the secret link token
   assert.equal((await c(`/order/${order.order_no}`)).status, 404);
-  assert.equal((await c(`/order/${order.order_no}?t=${order.access_token}`)).status, 200);
+  const page = await c(`/order/${order.order_no}?t=${order.access_token}`);
+  assert.equal(page.status, 200);
+
+  // Customer can send the order to the shop's WhatsApp, and the shop got an email
+  const html = await page.text();
+  const wa = html.match(/href="https:\/\/wa\.me\/919969495026\?text=([^"]+)"[^>]*>\s*<svg[^]*?Send my order on WhatsApp/);
+  assert.ok(wa, 'WhatsApp order button present');
+  const text = decodeURIComponent(wa[1]);
+  assert.ok(text.includes(order.order_no) && text.includes('Test Navratri Blouse (Size 40) x 1') && text.includes('Cash on Delivery'));
+  const alert = emails.find((e) => e.subject.includes(order.order_no));
+  assert.match(alert.subject, /COD/);
+  assert.ok(alert.textContent.includes('+91 9825012345') && alert.textContent.includes('/admin/orders/'));
 });
 
 test('checkout rejects bad details and sold-out items', async () => {

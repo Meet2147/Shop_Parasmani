@@ -1,5 +1,6 @@
 const { db, transaction } = require('./db');
 const { newOrderNo, token } = require('./util');
+const { notifyNewOrder } = require('./notify');
 
 const insertOrder = db.prepare(`
   INSERT INTO orders (order_no, access_token, customer_name, phone, email, address1, address2, city, state, pincode,
@@ -34,7 +35,8 @@ function createOrder(cart, customer, paymentMethod) {
 // if anything sold out meanwhile; for already-paid orders it confirms regardless so the
 // shop can sort it out with the customer.
 function confirmOrder(orderId, { strict, paymentId } = {}) {
-  return transaction(() => {
+  let justConfirmed = false;
+  const result = transaction(() => {
     const order = getOrderById.get(orderId);
     if (!order || order.status !== 'awaiting_payment') return order;
     const items = getItems.all(orderId);
@@ -48,8 +50,12 @@ function confirmOrder(orderId, { strict, paymentId } = {}) {
     db.prepare(`UPDATE orders SET status = 'confirmed', payment_status = ?, razorpay_payment_id = COALESCE(?, razorpay_payment_id),
                 updated_at = datetime('now') WHERE id = ?`)
       .run(paymentId ? 'paid' : order.payment_status, paymentId || null, orderId);
+    justConfirmed = true;
     return getOrderById.get(orderId);
   });
+  // Alert the shop once per order, after the order is safely saved.
+  if (justConfirmed) notifyNewOrder(result, getItems.all(orderId));
+  return result;
 }
 
 // Changes status from the admin panel. Cancelling a confirmed order puts the stock back.

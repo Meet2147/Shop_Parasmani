@@ -54,6 +54,16 @@ drawn illustrations. Replace the samples with real photos from `/admin`. Run the
 4. **Domain and HTTPS:** point your domain at the host and set `BASE_URL=https://your-domain`.
 5. **Policies:** read the shipping and returns pages and adjust them to how your shop works.
 
+## New-order alerts
+
+Every confirmed order (Cash on Delivery placed, or online payment received) emails the shop
+through Brevo's free email service. Set `BREVO_API_KEY`, `EMAIL_FROM` (a sender you verified in
+Brevo) and `ORDER_ALERT_EMAIL` (where alerts go). On Render add them under the service's
+Environment tab. If they are empty, orders still work and simply appear in `/admin`.
+
+The order confirmation page also has a **Send my order on WhatsApp** button that opens WhatsApp
+with the order details addressed to `SHOP_WHATSAPP`.
+
 ## Project layout
 
 ```
@@ -63,6 +73,7 @@ src/db.js              SQLite tables (Node's built-in driver)
 src/cart.js            cart stored in a signed cookie
 src/orders.js          creating, confirming and cancelling orders with stock
 src/razorpay.js        Razorpay API and signature checks
+src/notify.js          new-order email alert and WhatsApp order message
 src/routes/shop.js     customer pages, checkout and payment
 src/routes/admin.js    admin panel
 src/routes/webhook.js  Razorpay webhook
