@@ -1,0 +1,3 @@
+<%# Brand wordmark: "Parasmani" in peacock blue with "Nx" in rani pink. %>
+<% const wm = shop.name.match(/^(.*?)(nx)$/i) %>
+<span class="wm"><% if (wm) { %><span class="wm-base"><%= wm[1] %></span><span class="wm-nx">Nx</span><% } else { %><%= shop.name %><% } %></span>

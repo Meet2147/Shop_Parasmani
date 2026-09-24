@@ -1,14 +1,9 @@
 <%# Parasmani mark: a garba dancer with a flowing dupatta. Strokes draw in on load, then the figure sways (see .logo-mark in style.css). %>
 <svg class="logo-mark" viewBox="4 2 56 60" aria-hidden="true">
-  <defs>
-    <linearGradient id="peacock-<%= locals.markId || 'm' %>" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0e8a8f"/><stop offset="1" stop-color="#0b4f6c"/>
-    </linearGradient>
-  </defs>
-  <g class="lm-body" fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path class="lm-stroke lm-leg-l" pathLength="1" d="M25.5 21 C27.5 35 24.5 47 13.5 59" stroke="#0b4f6c" stroke-width="2.8"/>
-    <path class="lm-stroke lm-leg-r" pathLength="1" d="M30.5 20 C30 35 37 47 49.5 55" stroke="#0b4f6c" stroke-width="2.8"/>
-    <path class="lm-stroke lm-arms" pathLength="1" d="M16 17.5 C20 20.5 23 20.5 26 18 S33 13.5 37.5 16.5" stroke="url(#peacock-<%= locals.markId || 'm' %>)" stroke-width="2.8"/>
-    <ellipse class="lm-stroke lm-head" pathLength="1" cx="27.8" cy="9" rx="3" ry="3.8" stroke="#0b4f6c" stroke-width="2.4"/>
+  <g class="lm-body" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.6">
+    <path class="lm-stroke lm-leg-l" pathLength="1" d="M25.5 21 C27.5 35 24.5 47 13.5 59" stroke="#0b4f6c"/>
+    <path class="lm-stroke lm-leg-r" pathLength="1" d="M30.5 20 C30 35 37 47 49.5 55" stroke="#0b4f6c"/>
+    <path class="lm-stroke lm-arms" pathLength="1" d="M16 17.5 C20 20.5 23 20.5 26 18 S33 13.5 37.5 16.5" stroke="#e0217a"/>
+    <ellipse class="lm-stroke lm-head" pathLength="1" cx="27.8" cy="9" rx="3" ry="3.8" stroke="#0b4f6c" stroke-width="2.3"/>
   </g>
 </svg>
